@@ -2,14 +2,19 @@
 
     let current = 'home';
 </script>
+<style>
+    img  {
+        width: 50px !important;height:50px !important;
+    }
+</style>
 
 <nav data-role="ribbonmenu" class="ribbon-menu" data-role-ribbonmenu="true">
      <ul class="tabs-holder">
             <li class="static">
-                <a href="#">ONLINE</a>
+                <a href="none">ONLINE</a>
             </li>
             <li on:click="{() => current = 'home'}" class:active="{current === 'home'}">
-                <a href="#">TICKET</a>
+                <a >TICKET</a>
             </li>
             <li on:click="{() => current = 'sub'}" class:active="{current === 'sub'}">
                 <a>SUBDIVISION</a>
@@ -22,8 +27,8 @@
         <div class:active="{current === 'home'}" class="section" id="section-ticket">
             <div class="group">
                 <button class="ribbon-button">
-                        <span class="icon">
-                            <img src="./assets/dashboard.png">
+                        <span >
+                            <img src="./assets/dashboard.png" alt="dashboard">
                         </span>
                     <span class="caption">Dashboard</span>
                 </button>
