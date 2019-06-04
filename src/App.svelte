@@ -1,5 +1,5 @@
 <script>
-	import RibbonToolbar from './RibbonToolbar.svelte';
+	import RibbonToolbar from './ui/RibbonToolbar.svelte';
 </script>
 
 <RibbonToolbar />

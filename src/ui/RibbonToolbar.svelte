@@ -1,0 +1,118 @@
+<script>
+
+    let current = 'home';
+</script>
+<style>
+    span img  {
+        width: 50px !important;height:50px !important;
+    }
+</style>
+
+<nav data-role="ribbonmenu" class="ribbon-menu" data-role-ribbonmenu="true">
+     <ul class="tabs-holder">
+            <li class="static">
+                <a>ONLINE</a>
+            </li>
+            <li on:click="{() => current = 'home'}" 
+                class:active="{current === 'home'}">
+                <a>TICKET</a>
+            </li>
+            <li on:click="{() => current = 'sub'}" 
+                class:active="{current === 'sub'}">
+                <a>SUBDIVISION</a>
+            </li>
+            <li on:click="{() => current = 'nrf'}" 
+                class:active="{current === 'nrf'}" >
+                <a>NRF'S</a>
+            </li>
+            <li on:click="{() => current = 'gis'}" 
+                class:active="{current === 'gis'}">
+                <a>GIS</a>
+            </li>
+            <li on:click="{() => current = 'settings'}" 
+                class:active="{current === 'settings'}">
+                <a>SETTINGS</a>
+            </li>
+      </ul>  
+       <div class="content-holder">
+            <div class:active="{current === 'home'}" class="section" id="section-ticket">
+                <div class="group">
+                    <button class="ribbon-button">
+                            <span >
+                                <img loading="lazy" src="./assets/dashboard.webp" alt="dashboard">
+                            </span>
+                        <span class="caption">Dashboard</span>
+                    </button>
+                    <button class="ribbon-button">
+                            <span >
+                                <img loading="lazy" src="./assets/calendar.webp" alt="Calendar">
+                            </span>
+                        <span class="caption">Calendar</span>
+                    </button>
+                     <button class="ribbon-button">
+                            <span >
+                                <img loading="lazy" src="./assets/cabinet.webp" alt="Archive">
+                            </span>
+                        <span class="caption">Archive</span>
+                    </button>
+                     <button class="ribbon-button">
+                           
+                        <span class="caption">Charts</span>
+                    </button>
+
+                    <span class="title">Display</span>
+                </div>
+                <div class="group">
+                    <button class="ribbon-button">
+                            <span >
+                                <img loading="lazy" src="./assets/edit.webp" alt="New Ticket">
+                            </span>
+                        <span class="caption">Share</span>
+                    </button>
+
+                    <span class="title">Insert</span>
+                </div>
+                <div class="group">
+                    <button class="ribbon-button">
+                      <span>
+                        <img loading="lazy" src="./assets/filter.png" alt="Filter">
+                      </span>
+                      <span class="caption">Filter</span>
+                    </button>
+
+                    <span class="title">Records</span>
+                </div>
+
+                <div class="group">
+                    <div class="input">
+                        <input type="text"  >
+                        <div class="button-group">
+                        <button class="button">
+                            <img loading="lazy"  src="./assets/search-solid.svg" alt="Search" >
+                        </button>
+                        </div>
+                        
+                    </div>
+                    <span class="title">
+                        Quick Search
+                    </span>
+                </div>
+
+            </div>
+
+            <div class:active="{current === 'sub'}" class="section" id="section-subdivision">
+                <p class="p-4">Subdivision</p>
+            </div>
+
+            <div class:active="{current === 'nrf'}" class="section" id="section-nrf">
+                <p class="p-4">Section NRF</p>
+            </div>
+
+            <div class:active="{current === 'gis'}" class="section" id="section-gis">
+                <p class="p-4">Section GIS</p>
+            </div>
+            <div class:active="{current === 'settings'}" class="section" id="section-settings">
+                <p class="p-4">Section Settings</p>
+            </div>
+    </div>                 
+</nav>
