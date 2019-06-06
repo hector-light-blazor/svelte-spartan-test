@@ -1,5 +1,10 @@
 <script>
-    let active = "customerData";
+
+    //First Lets figure out if the page has change or refresh..
+    let href = (window.location.href.includes("#")) ? window.location.href.split("#")[1]: 'customerData';
+    
+
+    let active = href;
 
     $: customerData = (active === 'customerData') ? '' : 'none';
     $: premisesData = (active === 'premisesData') ? '' : 'none';

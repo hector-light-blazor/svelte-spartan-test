@@ -56,15 +56,26 @@
                     </button>
                     <button class="ribbon-button">
                             <span >
-                                <img loading="lazy" src="./assets/calendar.webp" alt="Calendar">
+
+                                {#if iOS}
+                                    <img loading="lazy" src="./assets/calendar.png" alt="Calendar">
+                                {:else}
+                                   <img loading="lazy" src="./assets/calendar.webp" alt="Calendar">
+                                {/if}
                             </span>
                         <span class="caption">Calendar</span>
                     </button>
                      <button class="ribbon-button">
 
-                     <Link href="/spartan-svelte/about" className="btn"><span  >
-                                <img loading="lazy" src="./assets/cabinet.webp" alt="Archive">
-                            </span></Link>
+                            <Link href="/spartan-svelte/about" className="btn">
+                                <span  >
+                                 {#if iOS}
+                                    <img loading="lazy" src="./assets/cabinet.png" alt="Archive">
+                                 {:else}
+                                   <img loading="lazy" src="./assets/cabinet.webp" alt="Archive">
+                                 {/if} 
+                                </span>
+                            </Link>
                             
                         <span class="caption">Archive</span>
                     </button>
@@ -98,7 +109,11 @@
                 <div class="group">
                     <button class="ribbon-button">
                       <span>
-                        <img loading="lazy" src="./assets/filter.webp" alt="Filter">
+                        {#if iOS}
+                            <img loading="lazy" src="./assets/filter.png" alt="Filter">
+                        {:else}
+                            <img loading="lazy" src="./assets/filter.webp" alt="Filter">
+                        {/if}
                       </span>
                       <span class="caption">Filter</span>
                     </button>
@@ -120,7 +135,45 @@
                         Quick Search
                     </span>
                 </div>
+                <div class="group">
+                     <button class="ribbon-button">
+                        <span>
+                            {#if iOS}
+                                <img loading="lazy" src="./assets/save.png" alt="Filter">
+                            {:else}
+                                <img loading="lazy" src="./assets/save.webp" alt="Filter">
+                            {/if}
+                        </span>
+                        <span class="caption">Save & Transfer</span>
+                    </button>
+                    <button class="ribbon-button">
+                        <span>
+                            {#if iOS}
+                                <img loading="lazy" src="./assets/garbage.png" alt="Filter">
+                            {:else}
+                                <img loading="lazy" src="./assets/garbage.webp" alt="Filter">
+                            {/if}
+                        </span>
+                        <span class="caption">Delete</span>
+                    </button>
+                    <button class="ribbon-button">
+                        <span>
+                            {#if iOS}
+                                <img loading="lazy" src="./assets/cabinet.png" alt="Filter">
+                            {:else}
+                                <img loading="lazy" src="./assets/cabinet.webp" alt="Filter">
+                            {/if}
+                        </span>
+                        <span class="caption">Archive</span>
+                    </button>
+                    <span class="title">
+                        Edits
+                    </span>
+                </div>
 
+                <div class="group">
+                    <span class="title">Insert</span>
+                </div>
             </div>
 
             <div class:active="{current === 'sub'}" class="section" id="section-subdivision">
