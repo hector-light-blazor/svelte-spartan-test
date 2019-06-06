@@ -1,5 +1,6 @@
 <script>
-
+    import { Router, Route, Link } from 'svero';
+    import About from './About.svelte';
     let current = 'home';
 </script>
 <style>
@@ -50,9 +51,11 @@
                         <span class="caption">Calendar</span>
                     </button>
                      <button class="ribbon-button">
-                            <span >
+
+                     <Link href="/spartan-svelte/about" className="btn"><span  >
                                 <img loading="lazy" src="./assets/cabinet.webp" alt="Archive">
-                            </span>
+                            </span></Link>
+                            
                         <span class="caption">Archive</span>
                     </button>
                      <button class="ribbon-button">
@@ -75,7 +78,7 @@
                 <div class="group">
                     <button class="ribbon-button">
                       <span>
-                        <img loading="lazy" src="./assets/filter.png" alt="Filter">
+                        <img loading="lazy" src="./assets/filter.webp" alt="Filter">
                       </span>
                       <span class="caption">Filter</span>
                     </button>
@@ -116,3 +119,8 @@
             </div>
     </div>                 
 </nav>
+
+
+<Router>
+  <Route path="/spartan-svelte/about" ><About on:message={() => current = 'home'} /></Route>
+</Router>
