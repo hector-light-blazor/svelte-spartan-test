@@ -1,7 +1,13 @@
 <script>
     import { Router, Route, Link } from 'svero';
     import About from './About.svelte';
+    import Ticket from '../pages/Ticket.svelte';
     let current = 'home';
+
+    let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+
+    console.log(iOS);
 </script>
 <style>
     span img  {
@@ -40,7 +46,11 @@
                 <div class="group">
                     <button class="ribbon-button">
                             <span >
-                                <img loading="lazy" src="./assets/dashboard.webp" alt="dashboard">
+                                {#if iOS}
+                                    <img loading="lazy" src="./assets/dashboard.png" alt="dashboard">
+                                {:else}
+                                   <img loading="lazy" src="./assets/dashboard.webp" alt="dashboard">
+                                {/if}
                             </span>
                         <span class="caption">Dashboard</span>
                     </button>
@@ -67,10 +77,20 @@
                 </div>
                 <div class="group">
                     <button class="ribbon-button">
-                            <span >
-                                <img loading="lazy" src="./assets/edit.webp" alt="New Ticket">
-                            </span>
-                        <span class="caption">Share</span>
+
+                        <Link href="/spartan-svelte/ticket" className="btn">
+                                {#if iOS}
+                                    <span >
+                                        <img loading="lazy" src="./assets/edit.png" alt="New Ticket">
+                                     </span>
+                                {:else}
+                                    <span >
+                                        <img loading="lazy" src="./assets/edit.webp" alt="New Ticket">
+                                     </span>
+                                {/if}
+                        </Link>
+                            
+                        <span class="caption">New</span>
                     </button>
 
                     <span class="title">Insert</span>
@@ -123,4 +143,5 @@
 
 <Router>
   <Route path="/spartan-svelte/about" ><About on:message={() => current = 'home'} /></Route>
+  <Route path="/spartan-svelte/ticket" ><Ticket /></Route>
 </Router>
