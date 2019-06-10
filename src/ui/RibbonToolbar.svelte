@@ -6,8 +6,12 @@
 
     let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
+    let toolbarOPTIONS = 'dash';
 
-    console.log(iOS);
+    function test() {
+        alert("HELLO");
+    }
+    
 </script>
 <style>
     span img  {
@@ -87,7 +91,7 @@
                     <span class="title">Display</span>
                 </div>
                 <div class="group">
-                    <button class="ribbon-button">
+                    <button on:click={test} class="ribbon-button">
 
                         <Link href="/spartan-svelte/ticket" className="btn">
                                 {#if iOS}
@@ -196,5 +200,5 @@
 
 <Router>
   <Route path="/spartan-svelte/about" ><About on:message={() => current = 'home'} /></Route>
-  <Route path="/spartan-svelte/ticket" ><Ticket /></Route>
+  <Route path="/spartan-svelte/ticket" ><Ticket option={toolbarOPTIONS} /></Route>
 </Router>

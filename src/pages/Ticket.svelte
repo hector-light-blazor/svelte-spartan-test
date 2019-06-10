@@ -1,11 +1,17 @@
 <script>
 
+
+   import { fade } from 'svelte/transition';
+   
     //First Lets figure out if the page has change or refresh..
     let href = (window.location.href.includes("#")) ? window.location.href.split("#")[1]: 'customerData';
     
 
     let active = href;
 
+    export let option = "hello";
+
+    $: ido = (option == "TICKET") ? "hello world" : " none ";
     $: customerData = (active === 'customerData') ? '' : 'none';
     $: premisesData = (active === 'premisesData') ? '' : 'none';
     $: lv      = (active === 'lv') ? '' : 'none';
@@ -45,14 +51,15 @@
     </ul>    
 
     <div class="border bd-default no-border-top p-2">
-        <div style="display: {customerData}" id="customerData">
-                A falsis, calceus altus racana.
+        <div transition:fade   style="display: {customerData}" id="customerData">
+              <p >A falsis, calceus altus racana.</p>  
         </div>
-        <div style="display: {premisesData}" id="premisesData">
+        <div  style="display: {premisesData}" id="premisesData">
                 The shield is a post-apocalyptic nanomachine.
         </div>
-        <div style="display: {lv}" id="lv">
+        <div  style="display: {lv}" id="lv">
                 Cream soup is just not the same without basil
+                {ido}
         </div>
 </div>   
 
