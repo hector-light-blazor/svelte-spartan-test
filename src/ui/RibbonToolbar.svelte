@@ -2,13 +2,17 @@
     import { Router, Route, Link } from 'svero';
     import About from './About.svelte';
     import Ticket from '../pages/Ticket.svelte';
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
+
     let current = 'home';
 
     let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
     let toolbarOPTIONS = 'dash';
 
-    function test() {
+    function saveTicket() {
         alert("HELLO");
     }
     
@@ -91,7 +95,7 @@
                     <span class="title">Display</span>
                 </div>
                 <div class="group">
-                    <button on:click={test} class="ribbon-button">
+                    <button  class="ribbon-button">
 
                         <Link href="/spartan-svelte/ticket" className="btn">
                                 {#if iOS}
@@ -140,7 +144,7 @@
                     </span>
                 </div>
                 <div class="group">
-                     <button class="ribbon-button">
+                     <button on:click={saveTicket} class="ribbon-button">
                         <span>
                             {#if iOS}
                                 <img loading="lazy" src="./assets/save.png" alt="Filter">
