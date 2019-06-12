@@ -9,9 +9,17 @@
 
     let active = href;
 
-    export let option = "hello";
+    export let action;
 
-    $: ido = (option == "TICKET") ? "hello world" : " none ";
+    $: handleAction = () => {
+            switch (action) {
+                    case "SAVE":
+                        alert("STARTING TO SAVE");
+                        break;
+                    default:
+                        break;
+            }
+    };
     $: customerData = (active === 'customerData') ? '' : 'none';
     $: premisesData = (active === 'premisesData') ? '' : 'none';
     $: lv      = (active === 'lv') ? '' : 'none';
@@ -21,9 +29,10 @@
     $: history = (active === 'history') ? '' : 'none';
     $: msg     = (active === 'msg') ? '' : 'none';
 
-</script>
-<div class="tabs tabs-wrapper top tabs-expand" >
 
+</script>
+<div  class="tabs tabs-wrapper top tabs-expand" >
+        
     <ul class="tabs-list">
         <li on:click="{() => active = 'customerData'}" 
                 class:active="{active === 'customerData'}"><a href="#customerData">CUSTOMER DATA</a>
@@ -59,7 +68,7 @@
         </div>
         <div  style="display: {lv}" id="lv">
                 Cream soup is just not the same without basil
-                {ido}
+                
         </div>
 </div>   
 

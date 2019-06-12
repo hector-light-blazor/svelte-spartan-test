@@ -1,20 +1,16 @@
 <script>
     import { Router, Route, Link } from 'svero';
+    import { fade, fly } from 'svelte/transition';
     import About from './About.svelte';
     import Ticket from '../pages/Ticket.svelte';
-    import { createEventDispatcher } from 'svelte';
+  
 
-    const dispatch = createEventDispatcher();
+    let current = 'home'; //This handles the ribbon toolbar..
 
-    let current = 'home';
+    let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform); //What type of platform we are in...
 
-    let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-
-    let toolbarOPTIONS = 'dash';
-
-    function saveTicket() {
-        alert("HELLO");
-    }
+    let action = "";
+    let display = "";
     
 </script>
 <style>
@@ -52,7 +48,7 @@
        <div class="content-holder">
             <div class:active="{current === 'home'}" class="section" id="section-ticket">
                 <div class="group">
-                    <button class="ribbon-button">
+                    <button on:click={() =>{ display = "NONE"} } class="ribbon-button">
                             <span >
                                 {#if iOS}
                                     <img loading="lazy" src="./assets/dashboard.png" alt="dashboard">
@@ -95,7 +91,7 @@
                     <span class="title">Display</span>
                 </div>
                 <div class="group">
-                    <button  class="ribbon-button">
+                    <button on:click={() => {display = "TICKET"}} class="ribbon-button">
 
                         <Link href="/spartan-svelte/ticket" className="btn">
                                 {#if iOS}
@@ -143,45 +139,47 @@
                         Quick Search
                     </span>
                 </div>
-                <div class="group">
-                     <button on:click={saveTicket} class="ribbon-button">
-                        <span>
-                            {#if iOS}
-                                <img loading="lazy" src="./assets/save.png" alt="Filter">
-                            {:else}
-                                <img loading="lazy" src="./assets/save.webp" alt="Filter">
-                            {/if}
+                {#if display === "TICKET"}
+                    <div in:fly="{{ x: 200, duration: 2000 }}" out:fade class="group">
+                        <button on:click="{() => {action = "SAVE"}}"  class="ribbon-button">
+                            <span>
+                                {#if iOS}
+                                    <img loading="lazy" src="./assets/save.png" alt="Filter">
+                                {:else}
+                                    <img loading="lazy" src="./assets/save.webp" alt="Filter">
+                                {/if}
+                            </span>
+                            <span class="caption">Save & Transfer</span>
+                        </button>
+                        <button on:click="{() => {action = "delete"}}" class="ribbon-button">
+                            <span>
+                                {#if iOS}
+                                    <img loading="lazy" src="./assets/garbage.png" alt="Filter">
+                                {:else}
+                                    <img loading="lazy" src="./assets/garbage.webp" alt="Filter">
+                                {/if}
+                            </span>
+                            <span class="caption">Delete</span>
+                        </button>
+                        <button class="ribbon-button">
+                            <span>
+                                {#if iOS}
+                                    <img loading="lazy" src="./assets/cabinet.png" alt="Filter">
+                                {:else}
+                                    <img loading="lazy" src="./assets/cabinet.webp" alt="Filter">
+                                {/if}
+                            </span>
+                            <span class="caption">Archive</span>
+                        </button>
+                        <span class="title">
+                            Edits
                         </span>
-                        <span class="caption">Save & Transfer</span>
-                    </button>
-                    <button class="ribbon-button">
-                        <span>
-                            {#if iOS}
-                                <img loading="lazy" src="./assets/garbage.png" alt="Filter">
-                            {:else}
-                                <img loading="lazy" src="./assets/garbage.webp" alt="Filter">
-                            {/if}
-                        </span>
-                        <span class="caption">Delete</span>
-                    </button>
-                    <button class="ribbon-button">
-                        <span>
-                            {#if iOS}
-                                <img loading="lazy" src="./assets/cabinet.png" alt="Filter">
-                            {:else}
-                                <img loading="lazy" src="./assets/cabinet.webp" alt="Filter">
-                            {/if}
-                        </span>
-                        <span class="caption">Archive</span>
-                    </button>
-                    <span class="title">
-                        Edits
-                    </span>
-                </div>
+                    </div>
 
-                <div class="group">
-                    <span class="title">Insert</span>
-                </div>
+                    <div in:fly="{{ x: 200, duration: 2000 }}" out:fade class="group">
+                        <span class="title">Insert</span>
+                    </div>
+            {/if}
             </div>
 
             <div class:active="{current === 'sub'}" class="section" id="section-subdivision">
@@ -204,5 +202,5 @@
 
 <Router>
   <Route path="/spartan-svelte/about" ><About on:message={() => current = 'home'} /></Route>
-  <Route path="/spartan-svelte/ticket" ><Ticket option={toolbarOPTIONS} /></Route>
+  <Route path="/spartan-svelte/ticket" ><Ticket action={action} /></Route>
 </Router>
