@@ -2,6 +2,7 @@
     import { Router, Route, Link } from 'svero';
     import { fade, fly } from 'svelte/transition';
     import DashBoard from '../pages/DashBoard.svelte';
+    import DashBoardWalkIn from '../pages/DashBoardWalkIn.svelte';
     import Ticket from '../pages/Ticket.svelte';
   
     export let url;
@@ -62,17 +63,21 @@
                         </Link>
                        
                         </button>
-                        <span on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE"}}" class="ribbon-split dropdown-toggle">More Options</span>
+                        <span  on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE"}}" 
+                        class="ribbon-split dropdown-toggle">More Options</span>
                         <ul style="display: {showOptionsDashBoard}" class="ribbon-dropdown" >
                             <li class="checked-one"><a href="#">ALL OPEN TICKETS</a></li>
                             <li class="checked-one"><a href="#">MY TICKETS</a></li>
-                            <li class="checked-one"><a href="#">WALK INS</a></li>    
+                            <li on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE"}}" class="checked-one">
+                                 <Link href="/spartan-svelte/dashboard/WALKIN">
+                                    WALK INS
+                                </Link>
+                            </li>    
                         </ul>
                     </div>
 
                     <button class="ribbon-button">
                             <span >
-
                                 {#if iOS}
                                     <img loading="lazy" src="./assets/calendar.png" alt="Calendar">
                                 {:else}
@@ -211,7 +216,11 @@
 </nav>
 
 
+
+
 <Router>
+   
   <Route path="/spartan-svelte/dashboard" ><DashBoard url={url} /></Route>
+  <Route path="/spartan-svelte/dashboard/WALKIN" ><DashBoardWalkIn url={url} /></Route>
   <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
 </Router>
