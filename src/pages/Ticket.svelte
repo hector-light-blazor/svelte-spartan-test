@@ -11,17 +11,7 @@
 
     export let action;
 
-    $: handleAction = function() {
-            console.log(action);
-            switch (action) {
-                    case "SAVE":
-                            
-                            break;
-            
-                    default:
-                            break;
-            }
-    }
+    $: handleAction = (action) ? decideAction(action) : '';
     $: customerData = (active === 'customerData') ? '' : 'none';
     $: premisesData = (active === 'premisesData') ? '' : 'none';
     $: lv      = (active === 'lv') ? '' : 'none';
@@ -31,6 +21,20 @@
     $: history = (active === 'history') ? '' : 'none';
     $: msg     = (active === 'msg') ? '' : 'none';
 
+
+    function decideAction(key) {
+            switch (key) {
+                case "SAVE":
+                action = '';
+                console.log("SAVING")
+                break;
+                case "DELETE":
+                console.log("DELETE")
+                break;
+                default:
+                break;
+            }
+    }
 
 </script>
 <div  class="tabs tabs-wrapper top tabs-expand" >

@@ -4,15 +4,12 @@
     import DashBoard from '../pages/DashBoard.svelte';
     import Ticket from '../pages/Ticket.svelte';
   
-
+    export let url;
     let current = 'home'; //This handles the ribbon toolbar..
-
     let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform); //What type of platform we are in...
-
     let action = "";
     let display = "";
     let dashboardOp = false;
-
     $: showOptionsDashBoard = (dashboardOp) ? '' : 'none';
     
 </script>
@@ -65,10 +62,10 @@
                         </Link>
                        
                         </button>
-                        <span on:click="{()=> {dashboardOp = !dashboardOp}}" class="ribbon-split dropdown-toggle">More Options</span>
+                        <span on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE"}}" class="ribbon-split dropdown-toggle">More Options</span>
                         <ul style="display: {showOptionsDashBoard}" class="ribbon-dropdown" >
                             <li class="checked-one"><a href="#">ALL OPEN TICKETS</a></li>
-                            <li class="checked-one"><a href="#">MY TICKETS (inbox)</a></li>
+                            <li class="checked-one"><a href="#">MY TICKETS</a></li>
                             <li class="checked-one"><a href="#">WALK INS</a></li>    
                         </ul>
                     </div>
@@ -155,7 +152,7 @@
                 </div>
                 {#if display === "TICKET"}
                     <div in:fly="{{ x: 200, duration: 2000 }}" out:fade class="group">
-                        <button on:click="{() => {action = "SAVE"}}"  class="ribbon-button">
+                        <button on:click="{() => {action = "SAVE";}}"  class="ribbon-button">
                             <span>
                                 {#if iOS}
                                     <img loading="lazy" src="./assets/save.png" alt="Filter">
@@ -165,7 +162,7 @@
                             </span>
                             <span class="caption">Save & Transfer</span>
                         </button>
-                        <button on:click="{() => {action = "delete"}}" class="ribbon-button">
+                        <button on:click="{() => {action = "DELETE"}}" class="ribbon-button">
                             <span>
                                 {#if iOS}
                                     <img loading="lazy" src="./assets/garbage.png" alt="Filter">
@@ -215,6 +212,6 @@
 
 
 <Router>
-  <Route path="/spartan-svelte/dashboard" ><DashBoard /></Route>
+  <Route path="/spartan-svelte/dashboard" ><DashBoard url={url} /></Route>
   <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
 </Router>
