@@ -11,15 +11,17 @@
 
     export let action;
 
-    $: handleAction = () => {
+    $: handleAction = function() {
+            console.log(action);
             switch (action) {
                     case "SAVE":
-                        alert("STARTING TO SAVE");
-                        break;
+                            
+                            break;
+            
                     default:
-                        break;
+                            break;
             }
-    };
+    }
     $: customerData = (active === 'customerData') ? '' : 'none';
     $: premisesData = (active === 'premisesData') ? '' : 'none';
     $: lv      = (active === 'lv') ? '' : 'none';

@@ -1,7 +1,7 @@
 <script>
     import { Router, Route, Link } from 'svero';
     import { fade, fly } from 'svelte/transition';
-    import About from './About.svelte';
+    import DashBoard from '../pages/DashBoard.svelte';
     import Ticket from '../pages/Ticket.svelte';
   
 
@@ -11,6 +11,9 @@
 
     let action = "";
     let display = "";
+    let dashboardOp = false;
+
+    $: showOptionsDashBoard = (dashboardOp) ? '' : 'none';
     
 </script>
 <style>
@@ -48,7 +51,10 @@
        <div class="content-holder">
             <div class:active="{current === 'home'}" class="section" id="section-ticket">
                 <div class="group">
-                    <button on:click={() =>{ display = "NONE"} } class="ribbon-button">
+
+                    <div class="ribbon-split-button">
+                        <button on:click="{() => {dashboardOp = false}}"  class="ribbon-main">
+                           <Link href="/spartan-svelte/dashboard">
                             <span >
                                 {#if iOS}
                                     <img loading="lazy" src="./assets/dashboard.png" alt="dashboard">
@@ -56,8 +62,17 @@
                                    <img loading="lazy" src="./assets/dashboard.webp" alt="dashboard">
                                 {/if}
                             </span>
-                        <span class="caption">Dashboard</span>
-                    </button>
+                        </Link>
+                       
+                        </button>
+                        <span on:click="{()=> {dashboardOp = !dashboardOp}}" class="ribbon-split dropdown-toggle">More Options</span>
+                        <ul style="display: {showOptionsDashBoard}" class="ribbon-dropdown" >
+                            <li class="checked-one"><a href="#">ALL OPEN TICKETS</a></li>
+                            <li class="checked-one"><a href="#">MY TICKETS (inbox)</a></li>
+                            <li class="checked-one"><a href="#">WALK INS</a></li>    
+                        </ul>
+                    </div>
+
                     <button class="ribbon-button">
                             <span >
 
@@ -71,7 +86,7 @@
                     </button>
                      <button class="ribbon-button">
 
-                            <Link href="/spartan-svelte/about" className="btn">
+                            
                                 <span  >
                                  {#if iOS}
                                     <img loading="lazy" src="./assets/cabinet.png" alt="Archive">
@@ -79,7 +94,6 @@
                                    <img loading="lazy" src="./assets/cabinet.webp" alt="Archive">
                                  {/if} 
                                 </span>
-                            </Link>
                             
                         <span class="caption">Archive</span>
                     </button>
@@ -201,6 +215,6 @@
 
 
 <Router>
-  <Route path="/spartan-svelte/about" ><About on:message={() => current = 'home'} /></Route>
-  <Route path="/spartan-svelte/ticket" ><Ticket action={action} /></Route>
+  <Route path="/spartan-svelte/dashboard" ><DashBoard /></Route>
+  <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
 </Router>
