@@ -2,23 +2,24 @@
     import { onMount } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     export let url;
-    let walkInTickets = [];
+    export let path;
+    let Tickets = [];
      onMount(async () => {
 
-        const res = await fetch(url + "addressticket/getAllWalkIn/");
+        const res = await fetch(url + path);
         
         let hold = await res.json();
-         walkInTickets = (hold) ? hold['data'] : [];
-        console.log(walkInTickets);
+        Tickets = (hold) ? hold['data'] : [];
+        
      });
 </script>
 <style>
    
 	.gridDash {
-
+        padding-left:10%;
 		display: grid;
-		grid-template-columns: 280px 280px 280px;
-        grid-gap: 10px;
+		grid-template-columns: 20% 20% 20% 20%;
+        grid-gap: 2%;
 	}
 
     .card {
@@ -27,19 +28,19 @@
 
 </style>
 
-<div class="contanier gridDash">
+<div class="contanier-fluid gridDash">
     
-    {#each walkInTickets as ticket}
+    {#each Tickets as ticket}
          <div in:fly="{{ y: 200, duration: 2000 }}" out:fade class="card">
             <div class="card-header">
                 <div class="avatar">
-                    <img src="./assets/globe-map-icon.webp" alt="Map Preview">
+                    <img src="../assets/globe-map-icon.webp" alt="Map Preview">
                 </div>
                 <div class="name">{ticket.cfirst_name + " " + ticket.clast_name}</div>
                 <div class="date">{ticket.created_date}</div>
             </div>
             <div class="card-content p-2">
-                <img src="./assets/globe-map-icon.webp" alt="Map Preview" style="width: 100%">
+                <img src="../assets/globe-map-icon.webp" alt="Map Preview" style="width: 100%">
             </div>
             <div class="card-footer">
                 <button class="button secondary mif-file-archive"></button>

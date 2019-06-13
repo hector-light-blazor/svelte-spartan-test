@@ -2,7 +2,7 @@
     import { Router, Route, Link } from 'svero';
     import { fade, fly } from 'svelte/transition';
     import DashBoard from '../pages/DashBoard.svelte';
-    import DashBoardWalkIn from '../pages/DashBoardWalkIn.svelte';
+    import DashBoardCard from '../pages/DashBoardCard.svelte';
     import Ticket from '../pages/Ticket.svelte';
   
     export let url;
@@ -10,11 +10,17 @@
     let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform); //What type of platform we are in...
     let action = "";
     let display = "";
+    let dashboardDropDown = {alltickets: false, mytickets: false, walkins: false }
     let dashboardOp = false;
     $: showOptionsDashBoard = (dashboardOp) ? '' : 'none';
     
 </script>
 <style>
+
+    .liactive{
+        border-color:#a4cef9;background-color:rgba(164,206,249,.2)
+    }
+
     span img  {
         width: 50px !important;height:50px !important;
     }
@@ -66,10 +72,20 @@
                         <span  on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE"}}" 
                         class="ribbon-split dropdown-toggle">More Options</span>
                         <ul style="display: {showOptionsDashBoard}" class="ribbon-dropdown" >
-                            <li class="checked-one"><a href="#">ALL OPEN TICKETS</a></li>
-                            <li class="checked-one"><a href="#">MY TICKETS</a></li>
-                            <li on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE"}}" class="checked-one">
-                                 <Link href="/spartan-svelte/dashboard/WALKIN">
+                            <li on:click={()=>{dashboardDropDown.alltickets = true; dashboardOp = !dashboardOp; display = "NONE";
+                                dashboardDropDown.walkins = false; 
+                                dashboardDropDown.mytickets = false}} 
+                            class:liactive={dashboardDropDown.alltickets} class="checked-one">
+                                <Link href="/spartan-svelte/dashboard/AllOpenTickets">
+                                    ALL OPEN TICKETS
+                                </Link>
+                            </li>
+
+                            <li class="checked-one"><Link href="/spartan-svelte/dashboard/AllOpenTickets">MY TICKETS</Link></li>
+                            <li class:liactive={dashboardDropDown.walkins} on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE";
+                                dashboardDropDown.alltickets = false; 
+                                dashboardDropDown.walkins = true; dashboardDropDown.mytickets = false}}" class="checked-one">
+                                 <Link href="/spartan-svelte/dashboard/WalkIns">
                                     WALK INS
                                 </Link>
                             </li>    
@@ -219,8 +235,9 @@
 
 
 <Router>
-   
+  
   <Route path="/spartan-svelte/dashboard" ><DashBoard url={url} /></Route>
-  <Route path="/spartan-svelte/dashboard/WALKIN" ><DashBoardWalkIn url={url} /></Route>
+  <Route path="/spartan-svelte/dashboard/WalkIns" ><DashBoardCard url={url} path={"addressticket/getAllWalkIn/"} /></Route>
+  <Route path="/spartan-svelte/dashboard/AllOpenTickets" ><DashBoardCard url={url} path={"addressticket/getAllPendingTicketsByOrga2/?id=6"} /></Route>
   <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
 </Router>
