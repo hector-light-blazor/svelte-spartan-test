@@ -1,6 +1,7 @@
 <script>
-     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
     
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+
     export let idTicket;
     export let center;
     export let lat;
@@ -8,14 +9,77 @@
     export let pictureURLMarker;
 
     let map;
+    let mapElement;
+
+    let urlEsriJSAPI = "https://js.arcgis.com/3.28/";
     let mapflex = "https://gis.lrgvdc911.org/arcgis/rest/services/Dynamic/MapFlex/MapServer";
     const dispatch = createEventDispatcher();
-   
     
-   onMount(async () => {
 
-       await require(["esri/map","esri/layers/ArcGISDynamicMapServiceLayer", "esri/symbols/PictureMarkerSymbol"], function(Map,ArcGISDynamicMapServiceLayer, PictureMarkerSymbol) {
-            console.log(esri)
+     //Lets load the esri Javascript..
+       var loadScriptAsync = (uri) =>{
+           var script = getScript();
+           var loaded = isLoaded(); 
+           return new Promise((resolve, reject) => {
+               if(script && loaded) {
+                   resolve();
+               }else {
+                    const script = document.createElement('script');
+                    script.src = uri;
+                    script.async = true;
+                    script.setAttribute("data-esri-loader", 'loading');
+                    script.onload  = () => {
+                        setTimeout(() => {
+                            resolve(script);
+                        }, 100);
+                        
+                    }
+                    document.body.appendChild(script);
+               }
+               
+           });
+       }
+
+    function getScript(){
+        return document.querySelector('script[data-esri-loader]');
+    }
+
+    function isLoaded() {
+        const globalRequire = window['require'];
+       
+        // .on() ensures that it's Dojo's AMD loader
+        return globalRequire;
+    }
+    
+    //When component is mound then load the esri library...
+   onMount(async () => {
+        console.log("AM STARTING");
+        if(getScript() && isLoaded()) {
+            loadMap()
+        }else{ //Async Load the Esri Library cuz we need it..
+             loadScriptAsync(urlEsriJSAPI).then(() => {
+               if(isLoaded()) {
+                   loadMap();
+               }
+               
+            });
+        }
+    });
+
+    //Once the component is destroy need to destroy any map instance if available..
+
+    onDestroy(() => { //Destroy the instance of the map...
+        if(map) { //If instance then destroy the map..
+            map.destroy();
+        }
+    })
+
+    async function loadMap() {
+        
+
+       await require(["esri/map","esri/layers/ArcGISDynamicMapServiceLayer","esri/geometry/Circle", "esri/symbols/PictureMarkerSymbol"], function(Map,ArcGISDynamicMapServiceLayer,Circle, PictureMarkerSymbol) {
+            
+            //Lets Make Sure we have a center needed...
             if (!center[0] && !center[1]) {
                 dispatch("MapError");
                 return;
@@ -24,9 +88,8 @@
                 center[1] = typeof center[1] === 'string' || center[1] instanceof String ? parseFloat(center[1]) : center[1];
             }
 
-                map =  new Map(idTicket, {
+                map =  new Map(mapElement, {
                 center: center,
-                zoom: 18,
                 slider: false
                 });
                 map.addLayer(new ArcGISDynamicMapServiceLayer(mapflex));
@@ -35,15 +98,18 @@
                         var point = new esri.geometry.Point(center[0], center[1]);
                         var symbol = new PictureMarkerSymbol(pictureURLMarker, 51, 51)
                         map.graphics.add(new esri.Graphic(point, symbol));
+
+                        //Zoom To Extent
+                        var circleGeometry = new Circle(point,{
+                            "radius": 1000
+                        });
+                        map.setExtent(circleGeometry.getExtent());
                     }
                 })
         }); 
-    });
-    onDestroy(() => { //Destroy the instance of the map...
-        map.destroy();
-    })
+    }
 </script>
 
-<div id="{idTicket}">
+<div bind:this={mapElement}>
 
 </div>
