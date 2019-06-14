@@ -2,18 +2,24 @@
     
     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
-    export let idTicket;
+    //Import Props
     export let center;
     export let lat;
     export let long;
     export let pictureURLMarker;
 
-    let map;
-    let mapElement;
-
-    let urlEsriJSAPI = "https://js.arcgis.com/3.28/";
-    let mapflex = "https://gis.lrgvdc911.org/arcgis/rest/services/Dynamic/MapFlex/MapServer";
     const dispatch = createEventDispatcher();
+    let map;
+    let mapElement; //The element to create the map...
+
+    //Lazy Load the esri Library if needed...
+    let urlEsriJSAPI = "https://js.arcgis.com/3.28/";
+    
+    //Any other MapServices As needed...
+    let mapflex = "https://gis.lrgvdc911.org/arcgis/rest/services/Dynamic/MapFlex/MapServer";
+
+
+    
     
 
      //Lets load the esri Javascript..
@@ -31,10 +37,10 @@
                     script.onload  = () => {
                         setTimeout(() => {
                             resolve(script);
-                        }, 100);
+                        }, 150);
                         
                     }
-                    document.body.appendChild(script);
+                    document.body.appendChild(script); // Append it to the 
                }
                
            });
