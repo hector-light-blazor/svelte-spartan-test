@@ -4,8 +4,6 @@
 
     //Import Props
     export let center;
-    export let lat;
-    export let long;
     export let pictureURLMarker;
 
     const dispatch = createEventDispatcher();
@@ -87,6 +85,8 @@
             
             //Lets Make Sure we have a center needed...
             if (!center[0] && !center[1]) {
+                console.log("ERROR");
+                
                 dispatch("MapError");
                 return;
             }else {

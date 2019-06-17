@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
-    import { fade, fly } from 'svelte/transition';
-    import CardContentFooter from '../ui/CardContentFooter.svelte';
+    import { fade } from 'svelte/transition';
+    import Card from '../ui/Card.svelte';
 
     export let url;
     export let path;
@@ -9,11 +9,11 @@
     let ticketCount = 0;
     let mapAvailable = false;
      onMount(async () => {
-        
         const res = await fetch(url + path);
         
         let hold = await res.json();
         Tickets =  (hold) ? hold['data'] : []; 
+        console.log(Tickets);
         ticketCount = Tickets.length;
         
      });
@@ -29,9 +29,7 @@
         grid-gap: 2%;
 	}
 
-    .card {
-        margin-top: 0 !important;
-    }
+  
 </style>
  <button out:fade style="position: fixed; bottom: 10px; right: 10px;" class="action-button rotate-minus bg-red fg-white">
     <span style="font-size: 18px; font-weight: bold;">{ticketCount}</span>
@@ -39,16 +37,6 @@
 <div class="contanier-fluid gridDash">
     
     {#each Tickets as ticket, i}
-         <div in:fly={{ y: 200, duration: 2000 }} out:fade class="card">
-            <div class="card-header">
-                <div class="avatar">
-                    <img src="../assets/globe-map-icon.webp" alt="Map Preview">
-                </div>
-                <div class="name">{ticket.cfirst_name + " " + ticket.clast_name}</div>
-                <div class="date">{ticket.created_date}</div>
-            </div>
-            <CardContentFooter x={ticket.longy} y={ticket.lat}></CardContentFooter>
-        </div>
-
+        <Card cfirst_name={ticket.cfirst_name} x={ticket.longy} y={ticket.lat} created_date={ticket.created_date} clast_name={ticket.clast_name} />
     {/each}
 </div>

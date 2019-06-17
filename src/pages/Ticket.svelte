@@ -8,9 +8,13 @@
     
 
     let active = href;
+    
+    let objectid;
+    let walk_in;
 
     export let action;
-
+    
+    //Handle action for the riboon and other actions..
     $: handleAction = (action) ? decideAction(action) : '';
     $: customerData = (active === 'customerData') ? '' : 'none';
     $: premisesData = (active === 'premisesData') ? '' : 'none';
@@ -26,6 +30,8 @@
             switch (key) {
                 case "SAVE":
                 action = '';
+                console.log(walk_in);
+                
                 console.log("SAVING")
                 break;
                 case "DELETE":
@@ -38,7 +44,9 @@
 
 </script>
 <div  class="tabs tabs-wrapper top tabs-expand" >
-        
+     <div style="float: left;">
+                <h3 >Ticket Number: {objectid}</h3>
+     </div>   
     <ul class="tabs-list">
         <li on:click="{() => active = 'customerData'}" 
                 class:active="{active === 'customerData'}"><a href="#customerData">CUSTOMER DATA</a>
@@ -65,9 +73,57 @@
                 class:active="{active === 'msg'}"><a  href="#msg">MESSAGES - </a></li>
     </ul>    
 
-    <div class="border bd-default no-border-top p-2">
-        <div transition:fade   style="display: {customerData}" id="customerData">
-              <p >A falsis, calceus altus racana.</p>  
+    <div class="frames border bd-default no-border-top p-2">
+        <div transition:fade  class="frame ribbed-white"  style="display: {customerData}" id="customerData">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" />
+                
+             </div>
+             <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>9-1-1 Telephone</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>ALT 1 Tele</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>ALT 2 Tele</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Prefered Language</label>
+                <select >
+                    <option></option>
+                    <option>English</option>
+                    <option>Spanish</option>
+                </select>
+             </div>
+             <div class="form-group">
+                <label>Walk In</label>
+                <select bind:value={walk_in}>
+                    <option ></option>
+                    <option >Yes</option>
+                    <option >No</option>
+                </select>{walk_in}
+             </div>
+             <div class="form-group">
+                <label>Utilities</label>
+                <select >
+                    <option ></option>
+                    <option >Yes</option>
+                    <option >No</option>
+                </select>
+             </div>
+             <div class="form-group">
+                <label>Mailing Info</label>
+                <input type="text" />
+             </div>
         </div>
         <div  style="display: {premisesData}" id="premisesData">
                 The shield is a post-apocalyptic nanomachine.
