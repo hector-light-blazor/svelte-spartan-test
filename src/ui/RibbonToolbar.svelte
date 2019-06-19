@@ -13,7 +13,14 @@
     let dashboardDropDown = {alltickets: false, mytickets: false, walkins: false }
     let dashboardOp = false;
     $: showOptionsDashBoard = (dashboardOp) ? '' : 'none';
-    
+    document.addEventListener('click',() => {
+        if(dashboardOp) {
+            
+        }else {
+                console.log("IS TRU")
+            dashboardOp = false;
+        }
+    }); 
 </script>
 <style>
 

@@ -1,16 +1,32 @@
 <script>
-
-
+   import { onMount, onDestroy } from 'svelte';
    import { fade } from 'svelte/transition';
-   
+   import DatePicker from "../ui/DatePicker.svelte";
+   import IMask from 'imask';
     //First Lets figure out if the page has change or refresh..
     let href = (window.location.href.includes("#")) ? window.location.href.split("#")[1]: 'customerData';
     
 
     let active = href;
-    
-    let objectid;
+    let id_ticket;
+    let objectid = 0;
+    let started_ticket;
+    let cfull_name;
+    let cfirst_name;
+    let clast_name;
+    let telephone_land_line = "";
+    let alt_telephone = "";
+    let alt2_telephone = "";
+    let alt3_telephone = "";
+    let alt4_telephone;
     let walk_in;
+
+    let tele_object;
+    let alt_object;
+    let alt2_object;
+    let tele_mask;
+    let alt_mask;
+    let alt2_mask;
 
     export let action;
     
@@ -24,23 +40,39 @@
     $: comment = (active === 'comment') ? '' : 'none';
     $: history = (active === 'history') ? '' : 'none';
     $: msg     = (active === 'msg') ? '' : 'none';
-
+   
 
     function decideAction(key) {
-            switch (key) {
-                case "SAVE":
+           switch (key) {
+              case "SAVE":
                 action = '';
-                console.log(walk_in);
-                
-                console.log("SAVING")
                 break;
-                case "DELETE":
-                console.log("DELETE")
+              case "DELETE":
                 break;
-                default:
+              default:
                 break;
-            }
+            } 
     }
+
+     onMount(async () => {
+
+          var maskOptions = {
+                mask: '(000) 000-0000'
+          };
+          tele_mask = IMask(tele_object, maskOptions);
+          alt_mask = IMask(alt_object, maskOptions);
+          alt2_mask = IMask(alt2_object, maskOptions);
+     })
+
+     onDestroy(async () => {
+        console.log("TICKET OBJECT DESTROY");      
+        
+               
+        tele_mask.destroy();
+        alt_mask.destroy();
+        alt2_mask.destroy();
+     });
+
 
 </script>
 <div  class="tabs tabs-wrapper top tabs-expand" >
@@ -86,15 +118,15 @@
              </div>
              <div class="form-group">
                 <label>9-1-1 Telephone</label>
-                <input type="text" />
+                <input bind:this={tele_object} bind:value={telephone_land_line} type="text" />
              </div>
              <div class="form-group">
                 <label>ALT 1 Tele</label>
-                <input type="text" />
+                <input bind:this={alt_object} type="text" />
              </div>
              <div class="form-group">
                 <label>ALT 2 Tele</label>
-                <input type="text" />
+                <input bind:this={alt2_object} type="text" />
              </div>
              <div class="form-group">
                 <label>Prefered Language</label>
@@ -110,7 +142,7 @@
                     <option ></option>
                     <option >Yes</option>
                     <option >No</option>
-                </select>{walk_in}
+                </select>
              </div>
              <div class="form-group">
                 <label>Utilities</label>
@@ -126,11 +158,92 @@
              </div>
         </div>
         <div  style="display: {premisesData}" id="premisesData">
-                The shield is a post-apocalyptic nanomachine.
+              <div class="form-group">
+                <label>Owner First Name</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Owner Last Name</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Subdivision</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Block Number</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Lot Number</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Tax Account</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Property Id</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Street</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Intersection</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Building Description</label>
+                <textarea ></textarea>
+             </div>
+             
         </div>
         <div  style="display: {lv}" id="lv">
-                Cream soup is just not the same without basil
-                
+              <div class="form-group">
+                <label>Address Number</label>
+                <input type="number" />
+             </div>
+             <div class="form-group">
+                <label>Pre Directional</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Road Name</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Street Type</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Post Directional</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Unit</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>MSAG Comm</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Postal Comm</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Full Address</label>
+                <input type="text" />
+             </div>
+             <div class="form-group">
+                <label>Address By</label>
+                <input placeholder="CLICK HERE TO STAMP" type="text" />
+             </div>
+             <div class="form-group">
+                <DatePicker />
+             </div>
         </div>
 </div>   
 

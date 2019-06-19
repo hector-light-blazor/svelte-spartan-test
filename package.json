@@ -20,6 +20,7 @@
     "start:dev": "sirv public --dev"
   },
   "dependencies": {
+    "imask": "^5.1.5",
     "svero": "^0.5.0"
   }
 }

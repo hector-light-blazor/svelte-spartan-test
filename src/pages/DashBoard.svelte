@@ -35,7 +35,7 @@
                 <ul class="listview view-content">
                     {#each openTickets as ticket}
                      <!-- content here -->
-                     <li class="node">
+                     <li >
                         
                         <div style="width: 100%" >
                             <div class="card">
