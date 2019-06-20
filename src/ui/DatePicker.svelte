@@ -1,45 +1,120 @@
 <script>
-    import {Months, WeekDays, Calendar} from '../utils/Months.js';
+    import {Months, WeekDays, CalendarPage} from '../utils/Months.js';
     import Week from './Week.svelte';
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
+
     let enable = false;
     let today = new Date();
+    let choosen = new Date();
     let calendars = [];
     let element;
+    
+    
 
-    $: formatDate = (today) ? format():"None";
+    $: formatDate = (choosen) ? format():"None";
     $: MonthTitle = Months[today.getMonth()] + " " + today.getFullYear();
+
     function format() {
-        let month = (today.getMonth() + 1) ;
-        let day = (today.getDate() < 10) ? "0" + today.getDate() : today.getDate();
+        let month = (choosen.getMonth() + 1) ;
+        let day = (choosen.getDate() < 10) ? "0" + choosen.getDate() : choosen.getDate();
         month = (month < 10) ? "0" + month : month;
 
-        return today.getFullYear() + "-" + month + "-" + day;
+        return choosen.getFullYear() + "-" + month + "-" + day;
     }
     function goBackWards() {
         let month = today.getMonth() - 1; 
         let year = today.getFullYear();
         today = new Date(year, month, 1);
         var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        reDraw()
     }
     function goFoward(){
         let month = today.getMonth() + 1;
         let year = today.getFullYear();
         today = new Date(year, month, 1);
         var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        reDraw()
     }
 
-    onMount(async () => {
-        let day = today.getDay();
 
-        if(day == 0) {
-
-        }else {
-            
+    function getDaysBackwards(date) {
+        var today   = new Date(date);
+        var number = date.getDay();
+        var days = [];
+        for(var x = 0; x < number; x++) {
+            var cutDays = number - x;
+            today.setDate(today.getDate() - cutDays);
+            days.push(new CalendarPage(new Date(today)));
+            today = new Date(date);            
         }
         
-    });
+        return days;
+    }
+
+    function getDaysFowards(date) {
+        var date = new Date(date);
+        var number = 6;
+        var days = [];
+        for(var x = 0; x < number; x++) {
+                days.push(new CalendarPage(new Date(date)));
+                date.setDate(date.getDate() + 1);
+        }
+
+        return days;
+    }
+
+    function daysInMonth(iMonth, iYear) 
+    { 
+      return 32 - new Date(iYear, iMonth, 32).getDate();
+    }
+
+    function getDaysInMonth(today, lastDay) {
+        var date = new Date(today);
+        
+        var month = date.getMonth();
+        var lastDay = new Date(lastDay); 
+        var calendars = [[], [], [], [], [], []];
+        var index = 0;
+        if(date.getDay() > 0) {
+            calendars[0] = getDaysBackwards(date);; 
+            
+        }
+
+        console.log(`index ${index}`);
+        var days = [];
+        
+        while (index < 6) {
+
+            if(calendars[index].length < 7) {
+                
+                calendars[index].push(new CalendarPage(new Date(date)));
+                date.setDate(date.getDate() + 1);
+             }
+
+             if(calendars[index].length == 7) {
+                 index++;
+                 days = [];
+             }  
+        }
+        return calendars;
+   }
+
+   async function reDrawFromBeg() {
+        calendars = [[], [], [], [], [], []]; //reset..
+        today = new Date(choosen.getFullYear(), choosen.getMonth(), 1);
+        calendars = await getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));
+        console.log(calendars);
+        
+   }
+
+   async function reDraw() {
+        calendars = [[], [], [], [], [], []]; //reset..
+        today = new Date(today.getFullYear(), today.getMonth(), 1);
+        calendars = await getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));
+        console.log(calendars);
+   }
+
 
 </script>
 <style>
@@ -86,18 +161,22 @@
     }
 
     .cal {
-            box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-    user-select: none;
-   
-    padding: 10px;
-    padding-top: 0;
+        box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+        user-select: none;
+        padding: 10px;
+        padding-top: 0;
+    }
+    .month-container {
+            width: 100%;
+            display: -ms-grid;
+            display: grid;
     }
 
 </style>
         
-<button class:btn={enable} on:click="{() => {enable = !enable;}}" class="button primary  outline large">{formatDate}</button>
+<button class:btn={enable} on:click="{() => {enable = !enable;reDrawFromBeg();}}" class="button primary  outline large">{formatDate}</button>
 {#if enable}
     <div bind:this={element} transition:fade class="wrapper contents">
         <div class="cal">
@@ -116,6 +195,12 @@
                         <div class="week-day">{day}</div>
                     {/each}
                 </div>
+            </div>
+            <div class="month-container">
+                {#each calendars as page}
+                     <!-- content here -->
+                     <Week days={page} />
+                {/each}
             </div>
         </div>
        
