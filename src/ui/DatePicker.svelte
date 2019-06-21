@@ -6,13 +6,15 @@
 
     let enable = false;
     let today = new Date();
-    let choosen = new Date();
+    let choosen = null;
+    let redrawing = false;
+    let indexHolder = {"outside" : 0, "inner" : 0};
     let calendars = [];
     let element;
     
     
 
-    $: formatDate = (choosen) ? format():"None";
+    $: formatDate = (choosen) ? format(): null;
     $: MonthTitle = Months[today.getMonth()] + " " + today.getFullYear();
 
     function format() {
@@ -22,42 +24,44 @@
 
         return choosen.getFullYear() + "-" + month + "-" + day;
     }
-    function goBackWards() {
+    function clickGoBackWards() {
         let month = today.getMonth() - 1; 
         let year = today.getFullYear();
         today = new Date(year, month, 1);
-        var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        //var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        calendars =  [[], [], [], [], [], []]; //reset..
         reDraw()
     }
-    function goFoward(){
+    function clickGoFoward(){
         let month = today.getMonth() + 1;
         let year = today.getFullYear();
         today = new Date(year, month, 1);
-        var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        //var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        calendars =  [[], [], [], [], [], []]; //reset..
         reDraw()
     }
 
 
-    function getDaysBackwards(date) {
+    function getDaysBackwards(date, month) {
         var today   = new Date(date);
         var number = date.getDay();
         var days = [];
         for(var x = 0; x < number; x++) {
             var cutDays = number - x;
             today.setDate(today.getDate() - cutDays);
-            days.push(new CalendarPage(new Date(today)));
+            days.push(new CalendarPage(new Date(today), month));
             today = new Date(date);            
         }
         
         return days;
     }
 
-    function getDaysFowards(date) {
+    function getDaysFowards(date, month) {
         var date = new Date(date);
         var number = 6;
         var days = [];
         for(var x = 0; x < number; x++) {
-                days.push(new CalendarPage(new Date(date)));
+                days.push(new CalendarPage(new Date(date), month));
                 date.setDate(date.getDate() + 1);
         }
 
@@ -77,18 +81,16 @@
         var calendars = [[], [], [], [], [], []];
         var index = 0;
         if(date.getDay() > 0) {
-            calendars[0] = getDaysBackwards(date);; 
+            calendars[0] = getDaysBackwards(date, month);
             
         }
-
-        console.log(`index ${index}`);
         var days = [];
         
         while (index < 6) {
 
             if(calendars[index].length < 7) {
                 
-                calendars[index].push(new CalendarPage(new Date(date)));
+                calendars[index].push(new CalendarPage(new Date(date), month));
                 date.setDate(date.getDate() + 1);
              }
 
@@ -103,16 +105,51 @@
    async function reDrawFromBeg() {
         calendars = [[], [], [], [], [], []]; //reset..
         today = new Date(choosen.getFullYear(), choosen.getMonth(), 1);
-        calendars = await getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));
-        console.log(calendars);
+        calendars = await getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));       
+        checkChoosen();
+      
+        
         
    }
 
    async function reDraw() {
-        calendars = [[], [], [], [], [], []]; //reset..
-        today = new Date(today.getFullYear(), today.getMonth(), 1);
-        calendars = await getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));
-        console.log(calendars);
+        redrawing = false;
+
+        setTimeout(() => {
+            today = new Date(today.getFullYear(), today.getMonth(), 1);
+            calendars =  getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));
+            redrawing = true;
+            checkChoosen();
+        }, 50);
+
+        
+   }
+
+   function checkChoosen() {
+        if(today.getMonth() == choosen.getMonth()) {
+            if(indexHolder.inner != 0 && indexHolder.outside != 0) { 
+                calendars[indexHolder.outside][indexHolder.inner].choosen = true;
+            }
+        }
+        
+   }
+
+   function handleChoosen(index, event) {
+        let indexPage = event.detail.index;
+        let date      = event.detail.getDate();
+
+        if(indexHolder.inner == 0 && indexHolder.outside == 0) {
+            indexHolder.outside = index;
+            indexHolder.inner = indexPage;
+            calendars[index][indexPage].choosen = true;
+            choosen = new Date(date);
+        }else {
+            calendars[indexHolder.outside][indexHolder.inner].choosen = false;
+            calendars[index][indexPage].choosen = true;
+            choosen = new Date(date);
+             indexHolder.outside = index;
+            indexHolder.inner = indexPage;
+        } 
    }
 
 
@@ -121,7 +158,8 @@
     .wrapper {
         position: absolute;
         width: 450px;
-        height: auto;
+        height: 450px;
+        border-radius: 10px;
         box-shadow:0px 10px 26px rgba(0,0,0,0.4);
         padding:15px;max-width:100%;margin:0 auto
     }
@@ -148,10 +186,12 @@
 
     .week {  
         display:grid;
-        grid-template-columns: repeat(7, 1fr);
+        
         grid-auto-flow: dense;
-        grid-gap: 2px 10px;
+        grid-gap: 10px;
+        grid-template-columns: repeat(7, 50px);
     }
+   
 
     .legend {
         color: #4a4a4a;
@@ -174,19 +214,26 @@
             display: grid;
     }
 
+    
+
 </style>
-        
+
+{#if choosen}   
 <button class:btn={enable} on:click="{() => {enable = !enable;reDrawFromBeg();}}" class="button primary  outline large">{formatDate}</button>
+{:else }
+<button class:btn={enable} on:click="{() => {enable = !enable;reDraw();}}" class="button primary  outline large">Choose Date</button>
+{/if}
 {#if enable}
     <div bind:this={element} transition:fade class="wrapper contents">
+
         <div class="cal">
              <div class="heading-section">
             <div class="control">
-                <span on:click={goBackWards} class="mif-chevron-thin-left"></span>
+                <span on:click={clickGoBackWards} class="mif-chevron-thin-left"></span>
             </div>
             <div class="label">{MonthTitle}</div> 
             <div class="control">
-                    <span on:click={goFoward} class="mif-chevron-thin-right"></span>
+                    <span on:click={clickGoFoward} class="mif-chevron-thin-right"></span>
             </div>
             </div>
             <div class="legend">
@@ -196,12 +243,15 @@
                     {/each}
                 </div>
             </div>
-            <div class="month-container">
-                {#each calendars as page}
-                     <!-- content here -->
-                     <Week days={page} />
-                {/each}
-            </div>
+            {#if redrawing}
+                 <div class="month-container">
+                    {#each calendars as page, i}
+                        <!-- content here -->
+                        <Week on:selected="{(event)=> {handleChoosen(i, event)}}"  days={page} />
+                    {/each}
+                </div>
+            {/if}
+            
         </div>
        
         

@@ -1,5 +1,8 @@
 <script>
+    import { fade,fly } from 'svelte/transition';
+    import {createEventDispatcher} from "svelte";
     export let days;
+    const dispatch = createEventDispatcher();
 
 </script>
 <style>
@@ -26,7 +29,6 @@
         flex-direction: column;
         width: 100%;
         position: relative;
-        border: 1px solid #fff;
         border-radius: 50%;
         margin: 10%;
         padding: 0;
@@ -36,13 +38,32 @@
         transition: all 100ms linear;
         font-weight: normal;
     }
+    .outSideMonth {
+        opacity: 0.35;
+    }
+
+    .isToday {
+        opacity: 1;
+        background: none;
+        border-color: #f7901e;
+        color: #000;
+    }
+
+    
+
+    .day-label:hover{
+        background-color: #f7901e;
+        border-color: #f7901e;
+        color: #fff
+    }
     
 </style>
-<div class="week">
-    {#each days as day}
-         <div class="day">
-            <button class="day-label">
-            {day.today}
+<div in:fly="{{x:-1*50, duration: 180, delay: 90}}" 
+  out:fade class="week">
+    {#each days as day, i}
+         <div  class:outSideMonth={day.outside} class="day">
+            <button on:click="{()=> {day.index = i; dispatch("selected",day)}}" class:primary={day.choosen} class:outline={day.choosen} class:isToday={day.today} class="button day-label">
+                {day.getDay()}
             </button>
          </div>
     {/each}
