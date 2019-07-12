@@ -1,3 +1,46 @@
+{#if choosen}   
+<button class:btn={enable} on:click="{() => {enable = !enable;reDrawFromBeg();}}" 
+class="button primary  outline large">{formatDate}</button>
+{:else }
+<button class:btn={enable} on:click="{() => {enable = !enable;reDraw();}}" 
+class="button primary  outline large">Choose Date</button>
+{/if}
+{#if enable}
+    <div bind:this={element} transition:fade class="wrapper contents">
+
+        <div class="cal">
+             <div class="heading-section">
+            <div class="control">
+                <span on:click={clickGoBackWards} class="mif-chevron-thin-left"></span>
+            </div>
+            <div class="label">{MonthTitle}</div> 
+            <div class="control">
+                    <span on:click={clickGoFoward} class="mif-chevron-thin-right"></span>
+            </div>
+            </div>
+            <div class="legend">
+                <div class="week">
+                    {#each WeekDays as day}
+                        <div class="week-day">{day}</div>
+                    {/each}
+                </div>
+            </div>
+            {#if redrawing}
+                 <div class="month-container">
+                    {#each calendars as page, i}
+                        <!-- content here -->
+                        <Week on:selected="{(event)=> {handleChoosen(i, event)}}"  days={page} />
+                    {/each}
+                </div>
+            {/if}
+            
+        </div>
+       
+        
+    </div>
+{/if}
+
+
 <script>
     import {Months, WeekDays, CalendarPage} from '../utils/Months.js';
     import Week from './Week.svelte';
@@ -24,6 +67,9 @@
 
         return choosen.getFullYear() + "-" + month + "-" + day;
     }
+
+
+
     function clickGoBackWards() {
         let month = today.getMonth() - 1; 
         let year = today.getFullYear();
@@ -154,6 +200,12 @@
 
 
 </script>
+
+
+
+
+
+
 <style>
     .wrapper {
         position: absolute;
@@ -217,44 +269,4 @@
     
 
 </style>
-
-{#if choosen}   
-<button class:btn={enable} on:click="{() => {enable = !enable;reDrawFromBeg();}}" class="button primary  outline large">{formatDate}</button>
-{:else }
-<button class:btn={enable} on:click="{() => {enable = !enable;reDraw();}}" class="button primary  outline large">Choose Date</button>
-{/if}
-{#if enable}
-    <div bind:this={element} transition:fade class="wrapper contents">
-
-        <div class="cal">
-             <div class="heading-section">
-            <div class="control">
-                <span on:click={clickGoBackWards} class="mif-chevron-thin-left"></span>
-            </div>
-            <div class="label">{MonthTitle}</div> 
-            <div class="control">
-                    <span on:click={clickGoFoward} class="mif-chevron-thin-right"></span>
-            </div>
-            </div>
-            <div class="legend">
-                <div class="week">
-                    {#each WeekDays as day}
-                        <div class="week-day">{day}</div>
-                    {/each}
-                </div>
-            </div>
-            {#if redrawing}
-                 <div class="month-container">
-                    {#each calendars as page, i}
-                        <!-- content here -->
-                        <Week on:selected="{(event)=> {handleChoosen(i, event)}}"  days={page} />
-                    {/each}
-                </div>
-            {/if}
-            
-        </div>
-       
-        
-    </div>
-{/if}
 
