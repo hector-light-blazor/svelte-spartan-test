@@ -1,6 +1,8 @@
 <script>
    import { onMount, onDestroy } from 'svelte';
    import { fade } from 'svelte/transition';
+   import WindowPop from '../ui/WindowPop.svelte';
+   import DisplayWeb from '../ui/DisplayWeb.svelte';
    import DatePicker from "../ui/DatePicker.svelte";
    import IMask from 'imask';
     //First Lets figure out if the page has change or refresh..
@@ -41,6 +43,7 @@
     $: history = (active === 'history') ? '' : 'none';
     $: msg     = (active === 'msg') ? '' : 'none';
    
+    //Decide Action is when ribbon press something happens in the ticket form...
 
     function decideAction(key) {
            switch (key) {
@@ -56,6 +59,7 @@
 
      onMount(async () => {
 
+         //Once the component is mounted lets add mask to the certain telephone numbers....
           var maskOptions = {
                 mask: '(000) 000-0000'
           };
@@ -67,14 +71,48 @@
      onDestroy(async () => {
         console.log("TICKET OBJECT DESTROY");      
         
-               
+        //prevent memory leaks...
         tele_mask.destroy();
         alt_mask.destroy();
         alt2_mask.destroy();
      });
 
+     function getHCADSubSuggestions(event) { 
+       
+
+        var html = event.target;
+        if(html.value.length > 3) {
+           var term = html.value;
+
+            var subURL = `http://propaccess.hidalgoad.org/ClientDB/Codes.aspx?cid=&term=${term}&type=S`;
+           
+            var formData = new FormData();
+            
+
+            formData.append('url', subURL);
+          
+
+            fetch('https://gis.lrgvdc911.org/php/spartan/api/v2/proxy.php', {
+            method: 'POST',
+            body: formData
+            })
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => console.log('Success:', JSON.stringify(response)));
+            
+            
+        }
+       
+
+     }
+
 
 </script>
+
+<WindowPop title="Hidalgo Appraisal District">
+   <DisplayWeb src="http://propaccess.hidalgoad.org/clientdb/?cid=1"></DisplayWeb>
+</WindowPop>
+
 <div  class="tabs tabs-wrapper top tabs-expand" >
      <div style="float: left;">
                 <h3 >Ticket Number: {objectid}</h3>
@@ -129,6 +167,16 @@
                 <input bind:this={alt2_object} type="text" />
              </div>
              <div class="form-group">
+               <label>Email</label>
+               <input type="email"  />
+             </div>
+             <div class="form-group">
+               <label>
+                  ALT E-mail
+               </label>
+               <input type="email" />
+             </div>
+             <div class="form-group">
                 <label>Prefered Language</label>
                 <select >
                     <option></option>
@@ -168,7 +216,7 @@
              </div>
              <div class="form-group">
                 <label>Subdivision</label>
-                <input type="text" />
+                <input on:keyup={getHCADSubSuggestions} type="text" />
              </div>
              <div class="form-group">
                 <label>Block Number</label>

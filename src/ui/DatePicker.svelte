@@ -44,14 +44,12 @@ class="button primary  outline large">Choose Date</button>
 <script>
     import {Months, WeekDays, CalendarPage} from '../utils/Months.js';
     import Week from './Week.svelte';
-    import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
 
     let enable = false;
     let today = new Date();
     let choosen = null;
     let redrawing = false;
-    let indexHolder = {"outside" : 0, "inner" : 0};
     let calendars = [];
     let element;
     
@@ -74,7 +72,7 @@ class="button primary  outline large">Choose Date</button>
         let month = today.getMonth() - 1; 
         let year = today.getFullYear();
         today = new Date(year, month, 1);
-        //var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        
         calendars =  [[], [], [], [], [], []]; //reset..
         reDraw()
     }
@@ -82,7 +80,7 @@ class="button primary  outline large">Choose Date</button>
         let month = today.getMonth() + 1;
         let year = today.getFullYear();
         today = new Date(year, month, 1);
-        //var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        
         calendars =  [[], [], [], [], [], []]; //reset..
         reDraw()
     }
@@ -96,21 +94,10 @@ class="button primary  outline large">Choose Date</button>
             var cutDays = number - x;
             today.setDate(today.getDate() - cutDays);
             days.push(new CalendarPage(new Date(today), month));
+            days[x].checkChoosen(choosen);
             today = new Date(date);            
         }
         
-        return days;
-    }
-
-    function getDaysFowards(date, month) {
-        var date = new Date(date);
-        var number = 6;
-        var days = [];
-        for(var x = 0; x < number; x++) {
-                days.push(new CalendarPage(new Date(date), month));
-                date.setDate(date.getDate() + 1);
-        }
-
         return days;
     }
 
@@ -121,28 +108,27 @@ class="button primary  outline large">Choose Date</button>
 
     function getDaysInMonth(today, lastDay) {
         var date = new Date(today);
-        
         var month = date.getMonth();
         var lastDay = new Date(lastDay); 
         var calendars = [[], [], [], [], [], []];
-        var index = 0;
+        var row = 0;
         if(date.getDay() > 0) {
             calendars[0] = getDaysBackwards(date, month);
             
         }
-        var days = [];
-        
-        while (index < 6) {
+        while (row < 6) {
 
-            if(calendars[index].length < 7) {
+            if(calendars[row].length < 7) {
                 
-                calendars[index].push(new CalendarPage(new Date(date), month));
+                calendars[row].push(new CalendarPage(new Date(date), month));
+                var col = calendars[row].length - 1;
+                if(col > -1)
+                {calendars[row][col].checkChoosen(choosen);}
                 date.setDate(date.getDate() + 1);
              }
 
-             if(calendars[index].length == 7) {
-                 index++;
-                 days = [];
+             if(calendars[row].length == 7) {
+                 row++;
              }  
         }
         return calendars;
@@ -152,50 +138,38 @@ class="button primary  outline large">Choose Date</button>
         calendars = [[], [], [], [], [], []]; //reset..
         today = new Date(choosen.getFullYear(), choosen.getMonth(), 1);
         calendars = await getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));       
-        checkChoosen();
-      
-        
-        
    }
 
    async function reDraw() {
         redrawing = false;
-
         setTimeout(() => {
             today = new Date(today.getFullYear(), today.getMonth(), 1);
             calendars =  getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));
             redrawing = true;
-            checkChoosen();
+           
         }, 50);
 
         
    }
 
-   function checkChoosen() {
-        if(today.getMonth() == choosen.getMonth()) {
-            if(indexHolder.inner != 0 && indexHolder.outside != 0) { 
-                calendars[indexHolder.outside][indexHolder.inner].choosen = true;
+
+   function handleChoosen(row, event) { 
+        let date      = event.detail.getDate();
+        choosen = new Date(date);
+        //Reset all the calendar to false
+         var rowsLength = calendars.length;
+        //Loop through all calendars and reset..
+        for(var x = 0; x < rowsLength; x++) {
+            var length = calendars[x].length;
+            for(var y = 0; y < length; y++){
+                //Only if choosen is true..
+                if(calendars[x][y].choosen){
+                    calendars[x][y].choosen = false;
+                }
             }
         }
-        
-   }
-
-   function handleChoosen(index, event) {
-        let indexPage = event.detail.index;
-        let date      = event.detail.getDate();
-
-        if(indexHolder.inner == 0 && indexHolder.outside == 0) {
-            indexHolder.outside = index;
-            indexHolder.inner = indexPage;
-            calendars[index][indexPage].choosen = true;
-            choosen = new Date(date);
-        }else {
-            calendars[indexHolder.outside][indexHolder.inner].choosen = false;
-            calendars[index][indexPage].choosen = true;
-            choosen = new Date(date);
-             indexHolder.outside = index;
-            indexHolder.inner = indexPage;
-        } 
+        //Finally Select the new date to highlight in the calendar..
+        calendars[row][event.detail.index].choosen = true;
    }
 
 

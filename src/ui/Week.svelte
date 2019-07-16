@@ -3,7 +3,6 @@
     import {createEventDispatcher} from "svelte";
     export let days;
     const dispatch = createEventDispatcher();
-
 </script>
 <style>
     .week {

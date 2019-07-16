@@ -16,6 +16,19 @@ export const CalendarPage = function(date, currentMonth) {
         return this.date;
     }
 
+    this.checkChoosen = (choosen) => {
+
+        if(!choosen) {return this.choosen;}
+
+        if(this.date.getMonth() == choosen.getMonth() 
+        && this.date.getFullYear() == choosen.getFullYear() 
+        && this.date.getDate() == choosen.getDate()) {
+                this.choosen = true;
+        }
+
+        return this.choosen;
+    }
+
     this.getDay = () => {
         return this.date.getDate();
     }
