@@ -4,6 +4,7 @@
     import DashBoard from '../pages/DashBoard.svelte';
     import DashBoardCard from '../pages/DashBoardCard.svelte';
     import Ticket from '../pages/Ticket.svelte';
+    import ShortCuts from '../ui/ShortCuts.svelte';
   
     export let url;
     let current = 'home'; //This handles the ribbon toolbar..
@@ -13,14 +14,6 @@
     let dashboardDropDown = {alltickets: false, mytickets: false, walkins: false }
     let dashboardOp = false;
     $: showOptionsDashBoard = (dashboardOp) ? '' : 'none';
-    document.addEventListener('click',() => {
-        if(dashboardOp) {
-            
-        }else {
-                console.log("IS TRU")
-            dashboardOp = false;
-        }
-    }); 
 </script>
 <style>
 
@@ -31,220 +24,238 @@
     span img  {
         width: 50px !important;height:50px !important;
     }
+    .squeeze {
+        width: 92%;
+        height: 100vh;
+        float:right;
+    }
+    section {
+        width: 100%;
+        height: 100%;
+    }
+
 </style>
 
-<nav data-role="ribbonmenu" class="ribbon-menu" data-role-ribbonmenu="true">
-     <ul class="tabs-holder">
-            <li class="static">
-                <a>ONLINE</a>
-            </li>
-            <li on:click="{() => current = 'home'}" 
-                class:active="{current === 'home'}">
-                <a>TICKET</a>
-            </li>
-            <li on:click="{() => current = 'sub'}" 
-                class:active="{current === 'sub'}">
-                <a>SUBDIVISION</a>
-            </li>
-            <li on:click="{() => current = 'nrf'}" 
-                class:active="{current === 'nrf'}" >
-                <a>NRF'S</a>
-            </li>
-            <li on:click="{() => current = 'gis'}" 
-                class:active="{current === 'gis'}">
-                <a>GIS</a>
-            </li>
-            <li on:click="{() => current = 'settings'}" 
-                class:active="{current === 'settings'}">
-                <a>SETTINGS</a>
-            </li>
-      </ul>  
-       <div class="content-holder">
-            <div class:active="{current === 'home'}" class="section" id="section-ticket">
-                <div class="group">
+<section>
+    <ShortCuts></ShortCuts>
+<div class="squeeze">
+        <nav data-role="ribbonmenu" class="ribbon-menu" data-role-ribbonmenu="true">
+            <ul class="tabs-holder">
+                    <li class="static">
+                        <a href="#">ONLINE</a>
+                    </li>
+                    <li on:click="{() => current = 'home'}" 
+                        class:active="{current === 'home'}">
+                        <a>TICKET</a>
+                    </li>
+                    <li on:click="{() => current = 'sub'}" 
+                        class:active="{current === 'sub'}">
+                        <a>SUBDIVISION</a>
+                    </li>
+                    <li on:click="{() => current = 'nrf'}" 
+                        class:active="{current === 'nrf'}" >
+                        <a>NRF'S</a>
+                    </li>
+                    <li on:click="{() => current = 'gis'}" 
+                        class:active="{current === 'gis'}">
+                        <a>GIS</a>
+                    </li>
+                    <li on:click="{() => current = 'settings'}" 
+                        class:active="{current === 'settings'}">
+                        <a>SETTINGS</a>
+                    </li>
+            </ul>  
+            <div class="content-holder">
+                    <div class:active="{current === 'home'}" class="section" id="section-ticket">
+                        <div class="group">
 
-                    <div class="ribbon-split-button">
-                        <button on:click="{() => {dashboardOp = false}}"  class="ribbon-main">
-                           <Link href="/spartan-svelte/dashboard">
-                            <span >
-                                {#if iOS}
-                                    <img loading="lazy" src="./assets/dashboard.png" alt="dashboard">
-                                {:else}
-                                   <img loading="lazy" src="./assets/dashboard.webp" alt="dashboard">
-                                {/if}
-                            </span>
-                        </Link>
-                       
-                        </button>
-                        <span  on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE"}}" 
-                        class="ribbon-split dropdown-toggle">More Options</span>
-                        <ul style="display: {showOptionsDashBoard}" class="ribbon-dropdown" >
-                            <li on:click={()=>{dashboardDropDown.alltickets = true; dashboardOp = !dashboardOp; display = "NONE";
-                                dashboardDropDown.walkins = false; 
-                                dashboardDropDown.mytickets = false}} 
-                            class:liactive={dashboardDropDown.alltickets} class="checked-one">
-                                <Link href="/spartan-svelte/dashboard/AllOpenTickets">
-                                    ALL OPEN TICKETS
-                                </Link>
-                            </li>
-
-                            <li class="checked-one"><Link href="/spartan-svelte/dashboard/AllOpenTickets">MY TICKETS</Link></li>
-                            <li class:liactive={dashboardDropDown.walkins} on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE";
-                                dashboardDropDown.alltickets = false; 
-                                dashboardDropDown.walkins = true; dashboardDropDown.mytickets = false}}" class="checked-one">
-                                 <Link href="/spartan-svelte/dashboard/WalkIns">
-                                    WALK INS
-                                </Link>
-                            </li>    
-                        </ul>
-                    </div>
-
-                    <button class="ribbon-button">
-                            <span >
-                                {#if iOS}
-                                    <img loading="lazy" src="./assets/calendar.png" alt="Calendar">
-                                {:else}
-                                   <img loading="lazy" src="./assets/calendar.webp" alt="Calendar">
-                                {/if}
-                            </span>
-                        <span class="caption">Calendar</span>
-                    </button>
-                     <button class="ribbon-button">
-
-                            
-                                <span  >
-                                 {#if iOS}
-                                    <img loading="lazy" src="./assets/cabinet.png" alt="Archive">
-                                 {:else}
-                                   <img loading="lazy" src="./assets/cabinet.webp" alt="Archive">
-                                 {/if} 
-                                </span>
-                            
-                        <span class="caption">Archive</span>
-                    </button>
-                     <button class="ribbon-button">
-                           
-                        <span class="caption">Charts</span>
-                    </button>
-
-                    <span class="title">Display</span>
-                </div>
-                <div class="group">
-                    <button on:click={() => {display = "TICKET"}} class="ribbon-button">
-
-                        <Link href="/spartan-svelte/ticket" className="btn">
-                                {#if iOS}
+                            <div class="ribbon-split-button">
+                                <button on:click="{() => {dashboardOp = false}}"  class="ribbon-main">
+                                <Link href="/spartan-svelte/dashboard">
                                     <span >
-                                        <img loading="lazy" src="./assets/edit.png" alt="New Ticket">
-                                     </span>
-                                {:else}
-                                    <span >
-                                        <img loading="lazy" src="./assets/edit.webp" alt="New Ticket">
-                                     </span>
-                                {/if}
-                        </Link>
+                                        {#if iOS}
+                                            <img loading="lazy" src="./assets/dashboard.png" alt="dashboard">
+                                        {:else}
+                                        <img loading="lazy" src="./assets/dashboard.webp" alt="dashboard">
+                                        {/if}
+                                    </span>
+                                </Link>
                             
-                        <span class="caption">New</span>
-                    </button>
+                                </button>
+                                <span  on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE"}}" 
+                                class="ribbon-split dropdown-toggle">More Options</span>
+                                <ul style="display: {showOptionsDashBoard}" class="ribbon-dropdown" >
+                                    <li on:click={()=>{dashboardDropDown.alltickets = true; dashboardOp = !dashboardOp; display = "NONE";
+                                        dashboardDropDown.walkins = false; 
+                                        dashboardDropDown.mytickets = false}} 
+                                    class:liactive={dashboardDropDown.alltickets} class="checked-one">
+                                        <Link href="/spartan-svelte/dashboard/AllOpenTickets">
+                                            ALL OPEN TICKETS
+                                        </Link>
+                                    </li>
 
-                    <span class="title">Insert</span>
-                </div>
-                <div class="group">
-                    <button class="ribbon-button">
-                      <span>
-                        {#if iOS}
-                            <img loading="lazy" src="./assets/filter.png" alt="Filter">
-                        {:else}
-                            <img loading="lazy" src="./assets/filter.webp" alt="Filter">
-                        {/if}
-                      </span>
-                      <span class="caption">Filter</span>
-                    </button>
+                                    <li class="checked-one"><Link href="/spartan-svelte/dashboard/AllOpenTickets">MY TICKETS</Link></li>
+                                    <li class:liactive={dashboardDropDown.walkins} on:click="{()=> {dashboardOp = !dashboardOp; display = "NONE";
+                                        dashboardDropDown.alltickets = false; 
+                                        dashboardDropDown.walkins = true; dashboardDropDown.mytickets = false}}" class="checked-one">
+                                        <Link href="/spartan-svelte/dashboard/WalkIns">
+                                            WALK INS
+                                        </Link>
+                                    </li>    
+                                </ul>
+                            </div>
 
-                    <span class="title">Records</span>
-                </div>
+                            <button class="ribbon-button">
+                                    <span >
+                                        {#if iOS}
+                                            <img loading="lazy" src="./assets/calendar.png" alt="Calendar">
+                                        {:else}
+                                        <img loading="lazy" src="./assets/calendar.webp" alt="Calendar">
+                                        {/if}
+                                    </span>
+                                <span class="caption">Calendar</span>
+                            </button>
+                            <button class="ribbon-button">
 
-                <div class="group">
-                    <div class="input">
-                        <input type="text"  >
-                        <div class="button-group">
-                        <button class="button">
-                            <img loading="lazy"  src="./assets/search-solid.svg" alt="Search" >
-                        </button>
+                                    
+                                        <span  >
+                                        {#if iOS}
+                                            <img loading="lazy" src="./assets/cabinet.png" alt="Archive">
+                                        {:else}
+                                        <img loading="lazy" src="./assets/cabinet.webp" alt="Archive">
+                                        {/if} 
+                                        </span>
+                                    
+                                <span class="caption">Archive</span>
+                            </button>
+                            <button class="ribbon-button">
+                                
+                                <span class="caption">Charts</span>
+                            </button>
+
+                            <span class="title">Display</span>
                         </div>
-                        
-                    </div>
-                    <span class="title">
-                        Quick Search
-                    </span>
-                </div>
-                {#if display === "TICKET"}
-                    <div in:fly="{{ x: 200, duration: 2000 }}" out:fade class="group">
-                        <button on:click="{() => {action = "SAVE";}}"  class="ribbon-button">
+                        <div class="group">
+                            <button on:click={() => {display = "TICKET"}} class="ribbon-button">
+
+                                <Link href="/spartan-svelte/ticket" className="btn">
+                                        {#if iOS}
+                                            <span >
+                                                <img loading="lazy" src="./assets/edit.png" alt="New Ticket">
+                                            </span>
+                                        {:else}
+                                            <span >
+                                                <img loading="lazy" src="./assets/edit.webp" alt="New Ticket">
+                                            </span>
+                                        {/if}
+                                </Link>
+                                    
+                                <span class="caption">New</span>
+                            </button>
+
+                            <span class="title">Insert</span>
+                        </div>
+                        <div class="group">
+                            <button class="ribbon-button">
                             <span>
                                 {#if iOS}
-                                    <img loading="lazy" src="./assets/save.png" alt="Filter">
+                                    <img loading="lazy" src="./assets/filter.png" alt="Filter">
                                 {:else}
-                                    <img loading="lazy" src="./assets/save.webp" alt="Filter">
+                                    <img loading="lazy" src="./assets/filter.webp" alt="Filter">
                                 {/if}
                             </span>
-                            <span class="caption">Save & Transfer</span>
-                        </button>
-                        <button on:click="{() => {action = "DELETE"}}" class="ribbon-button">
-                            <span>
-                                {#if iOS}
-                                    <img loading="lazy" src="./assets/garbage.png" alt="Filter">
-                                {:else}
-                                    <img loading="lazy" src="./assets/garbage.webp" alt="Filter">
-                                {/if}
+                            <span class="caption">Filter</span>
+                            </button>
+
+                            <span class="title">Records</span>
+                        </div>
+
+                        <div class="group">
+                            <div class="input">
+                                <input type="text"  >
+                                <div class="button-group">
+                                <button class="button">
+                                    <img loading="lazy"  src="./assets/search-solid.svg" alt="Search" >
+                                </button>
+                                </div>
+                                
+                            </div>
+                            <span class="title">
+                                Quick Search
                             </span>
-                            <span class="caption">Delete</span>
-                        </button>
-                        <button class="ribbon-button">
-                            <span>
-                                {#if iOS}
-                                    <img loading="lazy" src="./assets/cabinet.png" alt="Filter">
-                                {:else}
-                                    <img loading="lazy" src="./assets/cabinet.webp" alt="Filter">
-                                {/if}
-                            </span>
-                            <span class="caption">Archive</span>
-                        </button>
-                        <span class="title">
-                            Edits
-                        </span>
+                        </div>
+                        {#if display === "TICKET"}
+                            <div in:fly="{{ x: 200, duration: 2000 }}" out:fade class="group">
+                                <button on:click="{() => {action = "SAVE";}}"  class="ribbon-button">
+                                    <span>
+                                        {#if iOS}
+                                            <img loading="lazy" src="./assets/save.png" alt="Filter">
+                                        {:else}
+                                            <img loading="lazy" src="./assets/save.webp" alt="Filter">
+                                        {/if}
+                                    </span>
+                                    <span class="caption">Save & Transfer</span>
+                                </button>
+                                <button on:click="{() => {action = "DELETE"}}" class="ribbon-button">
+                                    <span>
+                                        {#if iOS}
+                                            <img loading="lazy" src="./assets/garbage.png" alt="Filter">
+                                        {:else}
+                                            <img loading="lazy" src="./assets/garbage.webp" alt="Filter">
+                                        {/if}
+                                    </span>
+                                    <span class="caption">Delete</span>
+                                </button>
+                                <button class="ribbon-button">
+                                    <span>
+                                        {#if iOS}
+                                            <img loading="lazy" src="./assets/cabinet.png" alt="Filter">
+                                        {:else}
+                                            <img loading="lazy" src="./assets/cabinet.webp" alt="Filter">
+                                        {/if}
+                                    </span>
+                                    <span class="caption">Archive</span>
+                                </button>
+                                <span class="title">
+                                    Edits
+                                </span>
+                            </div>
+
+                            <div in:fly="{{ x: 200, duration: 2000 }}" out:fade class="group">
+                                <span class="title">Insert</span>
+                            </div>
+                    {/if}
                     </div>
 
-                    <div in:fly="{{ x: 200, duration: 2000 }}" out:fade class="group">
-                        <span class="title">Insert</span>
+                    <div class:active="{current === 'sub'}" class="section" id="section-subdivision">
+                        <p class="p-4">Subdivision</p>
                     </div>
-            {/if}
-            </div>
 
-            <div class:active="{current === 'sub'}" class="section" id="section-subdivision">
-                <p class="p-4">Subdivision</p>
-            </div>
+                    <div class:active="{current === 'nrf'}" class="section" id="section-nrf">
+                        <p class="p-4">Section NRF</p>
+                    </div>
 
-            <div class:active="{current === 'nrf'}" class="section" id="section-nrf">
-                <p class="p-4">Section NRF</p>
-            </div>
-
-            <div class:active="{current === 'gis'}" class="section" id="section-gis">
-                <p class="p-4">Section GIS</p>
-            </div>
-            <div class:active="{current === 'settings'}" class="section" id="section-settings">
-                <p class="p-4">Section Settings</p>
-            </div>
-    </div>                 
-</nav>
+                    <div class:active="{current === 'gis'}" class="section" id="section-gis">
+                        <p class="p-4">Section GIS</p>
+                    </div>
+                    <div class:active="{current === 'settings'}" class="section" id="section-settings">
+                        <p class="p-4">Section Settings</p>
+                    </div>
+            </div>                 
+        </nav>
 
 
 
 
-<Router>
-  
-  <Route path="/spartan-svelte/dashboard" ><DashBoard url={url} /></Route>
-  <Route path="/spartan-svelte/dashboard/WalkIns" ><DashBoardCard url={url} path={"addressticket/getAllWalkIn/"} /></Route>
-  <Route path="/spartan-svelte/dashboard/AllOpenTickets" ><DashBoardCard url={url} path={"addressticket/getAllPendingTicketsByOrga2/?id=6"} /></Route>
-  <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
-</Router>
+        <Router>
+        
+        <Route path="/spartan-svelte/dashboard" ><DashBoard url={url} /></Route>
+        <Route path="/spartan-svelte/dashboard/WalkIns" ><DashBoardCard url={url} path={"addressticket/getAllWalkIn/"} /></Route>
+        <Route path="/spartan-svelte/dashboard/AllOpenTickets" ><DashBoardCard url={url} path={"addressticket/getAllPendingTicketsByOrga2/?id=6"} /></Route>
+        <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
+        </Router>
+
+</div>
+
+
+</section>

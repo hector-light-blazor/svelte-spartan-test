@@ -29,6 +29,7 @@
     let tele_mask;
     let alt_mask;
     let alt2_mask;
+    let dockable = false;
 
     export let action;
     
@@ -109,9 +110,12 @@
 
 </script>
 
-<Window title="Hidalgo Appraisal District">
-   <WebView src="http://propaccess.hidalgoad.org/clientdb/?cid=1"></WebView>
-</Window>
+{#if dockable}
+   <Window on:close={(event)=> {dockable = event.detail;}} title="Hidalgo Appraisal District">
+      <WebView  src="http://propaccess.hidalgoad.org/clientdb/?cid=1"></WebView>
+   </Window>
+{/if}
+
 
 <div  class="tabs tabs-wrapper top tabs-expand" >
      <div style="float: left;">
@@ -215,7 +219,7 @@
                 <input type="text" />
              </div>
              <div class="form-group">
-                <label>Subdivision</label>
+                <label on:click={()=>{ dockable = true;}}>Subdivision</label>
                 <input on:keyup={getHCADSubSuggestions} type="text" />
              </div>
              <div class="form-group">

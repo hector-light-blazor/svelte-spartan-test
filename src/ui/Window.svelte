@@ -1,6 +1,8 @@
 <script>
-   import { onMount, onDestroy } from 'svelte';
+   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
    export let title;
+
+   const dispatch = createEventDispatcher();
    let window;
    let header;
 
@@ -56,17 +58,16 @@
     .window {
         position: absolute;
         z-index: 3;
-        border: 2px  solid #f8f8f8;
-        padding: 4px;
-        width: 300px;
-        height: 300px;
+        border: 4px  solid #f8f8f8;
+        padding: 5px;
+        width: 95%;
+        height: 80%;
         background: #f8f8f8;
         resize: both;
         overflow: auto;
         border-radius: 4px;
-        cursor: nwse-resize;
-        
     }
+   
     .window-content {
         overflow: hidden !important;
     }
@@ -80,7 +81,7 @@
         <div class="buttons">
             <span class="btn-min"></span>
             <span class="btn-max"></span>
-            <span class="btn-close"></span>
+            <span on:click="{()=>{dispatch("close", false)}}" class="btn-close"></span>
         </div>
     </div>
     <div class="window-content">
