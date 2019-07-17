@@ -1,8 +1,8 @@
 <script>
    import { onMount, onDestroy } from 'svelte';
    import { fade } from 'svelte/transition';
-   import WindowPop from '../ui/WindowPop.svelte';
-   import DisplayWeb from '../ui/DisplayWeb.svelte';
+   import Window from '../ui/Window.svelte';
+   import WebView from '../ui/WebView.svelte';
    import DatePicker from "../ui/DatePicker.svelte";
    import IMask from 'imask';
     //First Lets figure out if the page has change or refresh..
@@ -109,9 +109,9 @@
 
 </script>
 
-<WindowPop title="Hidalgo Appraisal District">
-   <DisplayWeb src="http://propaccess.hidalgoad.org/clientdb/?cid=1"></DisplayWeb>
-</WindowPop>
+<Window title="Hidalgo Appraisal District">
+   <WebView src="http://propaccess.hidalgoad.org/clientdb/?cid=1"></WebView>
+</Window>
 
 <div  class="tabs tabs-wrapper top tabs-expand" >
      <div style="float: left;">

@@ -15,7 +15,7 @@
   function start() {
     if (header) {
         /* if present, the header is where you move the DIV from:*/
-        window.onmousedown = dragMouseDown;
+        header.onmousedown = dragMouseDown;
     } 
   }
 
@@ -56,11 +56,16 @@
     .window {
         position: absolute;
         z-index: 3;
+        border: 2px  solid #f8f8f8;
+        padding: 4px;
+        width: 300px;
+        height: 300px;
+        background: #f8f8f8;
+        resize: both;
+        overflow: auto;
+        border-radius: 4px;
+        cursor: nwse-resize;
         
-        width: 600px;
-        height: 600px;
-       
-
     }
     .window-content {
         overflow: hidden !important;
@@ -68,7 +73,7 @@
     
 </style>
 
-<div bind:this={window} class="window">
+<div  bind:this={window} class="window">
     <div bind:this={header} style="cursor: move;" class="window-caption">
         <span class="icon mif-windows"></span>
         <span class="title">{title}</span>
