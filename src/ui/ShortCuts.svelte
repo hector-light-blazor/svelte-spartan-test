@@ -4,15 +4,18 @@
         width: 80px;
         height: 82px;
         margin-bottom: 10px;
-        background: #4C0028;
+        background: #243C73;
         color: white;
+        overflow: hidden;
     }
     .shortcut:hover {
-        background: #8E2D60 !important;
+        background: transparent !important;
+        border: 1px solid #243C73;
+        color: #CAB448;
     }
 
 </style>
-<div class="bg-darkMagenta"  style="width: 8%; border-right: 4px solid #2B8736; padding: 10px; height: 100vh;float: left;">
+<div  style="background: #05173F; width: 8%; border-right: 4px solid #AC9528; padding: 10px; height: 100vh;float: left;">
     <div style="overflow: auto;">
         <button class="shortcut    rounded">
             <span class="caption">HCAD</span>
