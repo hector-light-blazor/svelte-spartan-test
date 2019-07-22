@@ -8,7 +8,6 @@
     const dispatch = createEventDispatcher();
     let CheckBox;
 
-
     async function makeDecision() {
         if(CheckBox) {
             await tick();
