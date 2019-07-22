@@ -2,21 +2,23 @@
    import {createEventDispatcher} from 'svelte';
    import Window from './Window.svelte';
    import WebView from './WebView.svelte';
-    let dockable = false;
+   import WebViewAdd from './WebViewAdd.svelte';
+
+    let webview = false;
+    let addWebView = false;
     let buttons  = [{caption: "HCAD", src: "http://propaccess.hidalgoad.org/clientdb/?cid=1", activate: false},
             {caption: "HCAD MAP", src: "http://propaccess.hidalgoad.org/mapSearch/?cid=1", activate: false}];
     let trackIndex;
     let title;
     let src;
-    const dispatch = createEventDispatcher();
-
+    
     function setActivation(index) {
         if(trackIndex > -1) {
             buttons[trackIndex].activate = false;
         }
 
 
-        dockable = true;
+        webview = true;
         buttons[index].activate = true;
         title = buttons[index].caption;
         src = buttons[index].src;
@@ -28,6 +30,12 @@
         trackIndex = -1;
         
     }
+
+    function addWebLink(value) {
+        buttons = buttons.concat(value)
+    }
+
+    
 
 </script>
 <style> 
@@ -73,7 +81,7 @@
     </div>
     
     <div id="targetCycle" class="innerCenter">
-        <button  class="shortcut rounded">
+        <button on:click={()=>{addWebView = true; console.log("HELLO")}}  class="shortcut rounded">
             <span class="mif-plus icon"></span>
         </button>
     </div>
@@ -81,8 +89,15 @@
 </div>
 
 
-{#if dockable}
-   <Window on:close={(event)=> {dockable = event.detail;reset()}} {title}>
+{#if webview}
+   <Window on:close={(event)=> {webview = event.detail;reset()}} {title}>
       <WebView  {src}></WebView>
+   </Window>
+{/if}
+
+{#if addWebView}
+     <!-- content here -->
+     <Window on:close={(event)=> {addWebView = event.detail;}} title="Add Web View">
+      <WebViewAdd on:add={(event)=>{addWebLink(event.detail)}}></WebViewAdd>
    </Window>
 {/if}

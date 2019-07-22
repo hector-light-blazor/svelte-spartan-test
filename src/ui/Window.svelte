@@ -58,7 +58,7 @@
     .window {
         position: absolute;
         z-index: 3;
-        border: 4px  solid #f8f8f8;
+        border: 4px  solid #CAB448;
         padding: 5px;
         width: 95%;
         height: 80%;
@@ -70,6 +70,10 @@
    
     .window-content {
         overflow: hidden !important;
+    }
+
+    .window-caption {
+      background: #243C73;
     }
     
 </style>
