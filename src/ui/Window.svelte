@@ -72,9 +72,7 @@
         overflow: hidden !important;
     }
 
-    .window-caption {
-      background: #243C73;
-    }
+    
     
 </style>
 

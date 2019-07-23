@@ -6,7 +6,7 @@ class="button primary  outline large">{formatDate}</button>
 class="button primary  outline large">Choose Date</button>
 {/if}
 {#if enable}
-    <div bind:this={element} transition:fade class="wrapper contents">
+    <div bind:this={element} class:wrapperUp={moveUp} transition:fade class="wrapper contents">
 
         <div class="cal">
              <div class="heading-section">
@@ -42,6 +42,7 @@ class="button primary  outline large">Choose Date</button>
 
 
 <script>
+    
     import {Months, WeekDays, CalendarPage} from '../utils/Months.js';
     import Week from './Week.svelte';
     import { fade } from 'svelte/transition';
@@ -52,11 +53,17 @@ class="button primary  outline large">Choose Date</button>
     let redrawing = false;
     let calendars = [];
     let element;
+
+    let moveUp = false;
     
     
 
     $: formatDate = (choosen) ? format(): null;
     $: MonthTitle = Months[today.getMonth()] + " " + today.getFullYear();
+
+
+   
+
 
     function format() {
         let month = (choosen.getMonth() + 1) ;
@@ -135,12 +142,16 @@ class="button primary  outline large">Choose Date</button>
    }
 
    async function reDrawFromBeg() {
+        moveUp = checkBottom();
         calendars = [[], [], [], [], [], []]; //reset..
         today = new Date(choosen.getFullYear(), choosen.getMonth(), 1);
         calendars = await getDaysInMonth(today, new Date(today.getFullYear(), today.getMonth(), daysInMonth(today.getMonth(), today.getFullYear())));       
    }
 
    async function reDraw() {
+         moveUp = checkBottom();
+
+        
         redrawing = false;
         setTimeout(() => {
             today = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -172,6 +183,17 @@ class="button primary  outline large">Choose Date</button>
         calendars[row][event.detail.index].choosen = true;
    }
 
+   function checkBottom() {
+
+       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+           return true;
+       }
+
+       return false;
+    }
+
+   
+
 
 </script>
 
@@ -185,10 +207,17 @@ class="button primary  outline large">Choose Date</button>
         position: absolute;
         width: 450px;
         height: 450px;
+        z-index: 3;
         border-radius: 10px;
         box-shadow:0px 10px 26px rgba(0,0,0,0.4);
-        padding:15px;max-width:100%;margin:0 auto
+        padding:15px;max-width:100%;margin:0 auto;
+        background: white;
     }
+
+    .wrapperUp {
+        bottom: 70px;
+    }
+
     .label {
         cursor: pointer;
     }

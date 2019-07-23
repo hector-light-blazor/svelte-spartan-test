@@ -16,7 +16,6 @@
     $: showOptionsDashBoard = (dashboardOp) ? '' : 'none';
 </script>
 <style>
-
     .liactive{
         border-color:#a4cef9;background-color:rgba(164,206,249,.2)
     }
@@ -189,9 +188,9 @@
                                 <button on:click="{() => {action = "SAVE";}}"  class="ribbon-button">
                                     <span>
                                         {#if iOS}
-                                            <img loading="lazy" src="./assets/save.png" alt="Filter">
+                                            <img loading="lazy" src="../assets/save.png" alt="Filter">
                                         {:else}
-                                            <img loading="lazy" src="./assets/save.webp" alt="Filter">
+                                            <img loading="lazy" src="../assets/save.webp" alt="Filter">
                                         {/if}
                                     </span>
                                     <span class="caption">Save & Transfer</span>
@@ -199,9 +198,9 @@
                                 <button on:click="{() => {action = "DELETE"}}" class="ribbon-button">
                                     <span>
                                         {#if iOS}
-                                            <img loading="lazy" src="./assets/garbage.png" alt="Filter">
+                                            <img loading="lazy" src="../assets/garbage.png" alt="Filter">
                                         {:else}
-                                            <img loading="lazy" src="./assets/garbage.webp" alt="Filter">
+                                            <img loading="lazy" src="../assets/garbage.webp" alt="Filter">
                                         {/if}
                                     </span>
                                     <span class="caption">Delete</span>
@@ -248,11 +247,11 @@
 
 
         <Router>
-        
-        <Route path="/spartan-svelte/dashboard" ><DashBoard url={url} /></Route>
-        <Route path="/spartan-svelte/dashboard/WalkIns" ><DashBoardCard url={url} path={"addressticket/getAllWalkIn/"} /></Route>
-        <Route path="/spartan-svelte/dashboard/AllOpenTickets" ><DashBoardCard url={url} path={"addressticket/getAllPendingTicketsByOrga2/?id=6"} /></Route>
-        <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
+             <Route path="*"  ><DashBoard url={url} /></Route>
+            <Route path="/spartan-svelte/dashboard" ><DashBoard url={url} /></Route>
+            <Route path="/spartan-svelte/dashboard/WalkIns" ><DashBoardCard url={url} path={"addressticket/getAllWalkIn/"} /></Route>
+            <Route path="/spartan-svelte/dashboard/AllOpenTickets" ><DashBoardCard url={url} path={"addressticket/getAllPendingTicketsByOrga2/?id=6"} /></Route>
+            <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
         </Router>
 
 </div>
