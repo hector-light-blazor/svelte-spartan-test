@@ -1,3 +1,6 @@
+<script>
+    import {  Link } from 'svero';
+</script>
 <style>
     [class*=mif-] {
     color: #E52888;
@@ -19,10 +22,10 @@
     -webkit-transform: scale(.8);
     transform: scale(.8);
 }
-a {
+    a {
     cursor: pointer;
     color: #0366d6 !important;
-}
+    }
 
     a:hover{color:#0056b3 !important;text-decoration:underline !important}
     
@@ -57,7 +60,7 @@ a {
                 <input type="checkbox" data-role="checkbox" data-caption="Remember me" >
                 <span> Remember Me</span>
                 <br>
-                <a>Forgot Password</a>
+                <Link>Forgot Password</Link>
             </div>
            
             <button class="button">Login</button>
