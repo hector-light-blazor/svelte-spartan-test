@@ -26,7 +26,7 @@
 <div class="container">
 
         <div class="window" style="float: left; width: 400px;">
-            <div class="window-caption bg-red">
+            <div class="window-caption">
                 <span class="icon mif-windows"></span>
                 <span class="title">Open Ticket's</span>
                 
@@ -65,7 +65,7 @@
         </div>
 
         <div class="window" style="float: right; width: 400px;">
-            <div class="window-caption bg-green">
+            <div class="window-caption">
                 <span class="icon mif-windows"></span>
                 <span class="title">Working Ticket's</span>
                
