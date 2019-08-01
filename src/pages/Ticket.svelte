@@ -3,34 +3,22 @@
    import { fade } from 'svelte/transition';
   
    import DatePicker from "../ui/DatePicker.svelte";
+   import Loading from "../ui/Loading.svelte";
+   import Ticket from "../utils/Tickets.js";
    import IMask from 'imask';
     //First Lets figure out if the page has change or refresh..
     let href = (window.location.href.includes("#")) ? window.location.href.split("#")[1]: 'customerData';
     
+    let ticket = new Ticket();
 
     let active = href;
-    let id_ticket;
-    let objectid = 0;
-    let started_ticket;
-    let cfull_name;
-    let cfirst_name;
-    let clast_name;
-    let telephone_land_line = "";
-    let alt_telephone = "";
-    let alt2_telephone = "";
-    let alt3_telephone = "";
-    let alt4_telephone;
-    let walk_in;
-
-    let tele_object;
-    let alt_object;
-    let alt2_object;
-    let tele_mask;
-    let alt_mask;
-    let alt2_mask;
+    let loading = true;
+   
     let dockable = false;
 
     export let action;
+    export let newTicket;
+    export let api;
     
     //Handle action for the riboon and other actions..
     $: handleAction = (action) ? decideAction(action) : '';
@@ -49,6 +37,8 @@
            switch (key) {
               case "SAVE":
                 action = '';
+                console.log(ticket);
+                
                 break;
               case "DELETE":
                 break;
@@ -58,23 +48,25 @@
     }
 
      onMount(async () => {
+         
+         if(newTicket){
+            
+            // ticket.fetchTicketNumber(api).then(res => res.json())
+            // .then(response => 
+            // console.log('Success:', response))
 
-         //Once the component is mounted lets add mask to the certain telephone numbers....
-          var maskOptions = {
-                mask: '(000) 000-0000'
-          };
-          tele_mask = IMask(tele_object, maskOptions);
-          alt_mask = IMask(alt_object, maskOptions);
-          alt2_mask = IMask(alt2_object, maskOptions);
+         }else{ //Fetch The URL..
+
+         }
+
+         loading = false;
+         
+         ticket.setUpMask();
      })
 
      onDestroy(async () => {
-        console.log("TICKET OBJECT DESTROY");      
-        
-        //prevent memory leaks...
-        tele_mask.destroy();
-        alt_mask.destroy();
-        alt2_mask.destroy();
+      
+       ticket.destroyMask();
      });
 
      function getHCADSubSuggestions(event) { 
@@ -109,71 +101,86 @@
 
 </script>
 
+{#if loading}
+    <!-- content here -->
+    <Loading />
+
+{/if}
 
 
-
-<div  class="tabs tabs-wrapper top tabs-expand" >
+<div  class="tabs tabs-wrapper top tabs-expand" style="height: 660px; overflow: auto;" >
      <div style="float: left;">
-                <h3 >Ticket Number: {objectid}</h3>
+                <h3 >Ticket Number: {ticket.objectid}</h3>
      </div>   
     <ul class="tabs-list">
         <li on:click="{() => active = 'customerData'}" 
-                class:active="{active === 'customerData'}"><a href="#customerData">CUSTOMER DATA</a>
+                class:active="{active === 'customerData'}">
+               <span>CUSTOMER DATA</span> 
         </li>
         <li on:click="{() => active = 'premisesData'}" 
-                class:active="{active === 'premisesData'}"><a href="#premisesData">PREMISES DATA</a>
+                class:active="{active === 'premisesData'}">
+                <span>PREMISES DATA</span>
         </li>
         <li on:click="{() => active = 'lv'}" 
-                class:active="{active === 'lv'}"><a href="#lv">LOCATION VALIDATION PROCESS</a>
+                class:active="{active === 'lv'}">
+                <span>LOCATION VALIDATION PROCESS</span>
         </li>
         <li on:click="{() => active = 'db'}" 
-                class:active="{active === 'db'}"><a href="#db">DATABASE VALIDATION PROCESS</a>
+                class:active="{active === 'db'}">
+                <span>DATABASE VALIDATION PROCESS</span>
         </li>
         <li on:click="{() => active = 'gis'}" 
-                class:active="{active === 'gis'}"><a href="#gis">GIS VALIDATION PROCESS</a>
+                class:active="{active === 'gis'}">
+              <span>
+               GIS VALIDATION PROCESS
+              </span> 
         </li>
         <li on:click="{() => active = 'comment'}" 
-                class:active="{active === 'comment'}"><a href="#comment">Comments Feed - </a>
+                class:active="{active === 'comment'}">
+                <span>Comments Feed - </span>
         </li>
         <li on:click="{() => active = 'history'}" 
-                class:active="{active === 'history'}" ><a  href="#history">CONNECTIONS - </a>
+                class:active="{active === 'history'}" >
+               <span>CONNECTIONS - </span> 
         </li>
         <li on:click="{() => active = 'msg'}" 
-                class:active="{active === 'msg'}"><a  href="#msg">MESSAGES - </a></li>
+                class:active="{active === 'msg'}">
+               <span>MESSAGES - </span> 
+         </li>
     </ul>    
 
     <div class="frames border bd-default no-border-top p-2">
         <div transition:fade  class="frame ribbed-white"  style="display: {customerData}" id="customerData">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" />
+                <input bind:value={ticket.cfirst_name} type="text" />
                 
              </div>
              <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" />
+                <input bind:value={ticket.clast_name} type="text" />
              </div>
              <div class="form-group">
                 <label>9-1-1 Telephone</label>
-                <input bind:this={tele_object} bind:value={telephone_land_line} type="text" />
+                <input bind:value={ticket.telephone_land_line} bind:this={ticket.tele_object} type="text" />
              </div>
              <div class="form-group">
                 <label>ALT 1 Tele</label>
-                <input bind:this={alt_object} type="text" />
+                <input bind:value={ticket.alt_telephone} bind:this={ticket.alt_object}  type="text" />
              </div>
              <div class="form-group">
                 <label>ALT 2 Tele</label>
-                <input bind:this={alt2_object} type="text" />
+                <input bind:value={ticket.alt2_telephone} bind:this={ticket.alt2_object} type="text" />
              </div>
              <div class="form-group">
                <label>Email</label>
-               <input type="email"  />
+               <input bind:value={ticket.cemail} type="email"  />
              </div>
              <div class="form-group">
                <label>
                   ALT E-mail
                </label>
-               <input type="email" />
+               <input bind:value={ticket.cemail} type="email" />
              </div>
              <div class="form-group">
                 <label>Prefered Language</label>
@@ -185,7 +192,7 @@
              </div>
              <div class="form-group">
                 <label>Walk In</label>
-                <select bind:value={walk_in}>
+                <select >
                     <option ></option>
                     <option >Yes</option>
                     <option >No</option>
@@ -201,21 +208,21 @@
              </div>
              <div class="form-group">
                 <label>Mailing Info</label>
-                <input type="text" />
+                <input  type="text" />
              </div>
         </div>
         <div  style="display: {premisesData}" id="premisesData">
               <div class="form-group">
                 <label>Owner First Name</label>
-                <input type="text" />
+                <input  type="text" />
              </div>
              <div class="form-group">
                 <label>Owner Last Name</label>
-                <input type="text" />
+                <input  type="text" />
              </div>
              <div class="form-group">
                 <label on:click={()=>{ dockable = true;}}>Subdivision</label>
-                <input on:keyup={getHCADSubSuggestions} type="text" />
+                <input  on:keyup={getHCADSubSuggestions} type="text" />
              </div>
              <div class="form-group">
                 <label>Block Number</label>
@@ -292,6 +299,27 @@
                 <DatePicker />
              </div>
         </div>
-</div>   
-
+   </div>
 </div>
+
+<style>
+   ul.tabs-list > li:hover {
+      cursor: pointer;
+   }
+
+   .tabs>ul.tabs-list>li>span {
+    padding: .5rem 1rem;
+    background-color: inherit;
+    color: inherit;
+    text-decoration: none;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+</style>

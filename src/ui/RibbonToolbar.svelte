@@ -208,9 +208,9 @@
                                 <button class="ribbon-button">
                                     <span>
                                         {#if iOS}
-                                            <img loading="lazy" src="./assets/cabinet.png" alt="Filter">
+                                            <img loading="lazy" src="../assets/cabinet.png" alt="Filter">
                                         {:else}
-                                            <img loading="lazy" src="./assets/cabinet.webp" alt="Filter">
+                                            <img loading="lazy" src="../assets/cabinet.webp" alt="Filter">
                                         {/if}
                                     </span>
                                     <span class="caption">Archive</span>
@@ -251,7 +251,7 @@
             <Route path="/spartan-svelte/dashboard" ><DashBoard url={url} /></Route>
             <Route path="/spartan-svelte/dashboard/WalkIns" ><DashBoardCard url={url} path={"addressticket/getAllWalkIn/"} /></Route>
             <Route path="/spartan-svelte/dashboard/AllOpenTickets" ><DashBoardCard url={url} path={"addressticket/getAllPendingTicketsByOrga2/?id=6"} /></Route>
-            <Route path="/spartan-svelte/ticket"  ><Ticket  action={action} /></Route>
+            <Route path="/spartan-svelte/ticket"  ><Ticket newTicket={true} api={url} action={action} /></Route>
         </Router>
 
 </div>
