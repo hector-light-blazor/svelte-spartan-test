@@ -4,6 +4,12 @@
 	import Ticket from './pages/Ticket.svelte';
 	import DatePicker from './ui/DatePicker.svelte';
 	let url = "https://gis.lrgvdc911.org/php/spartan/api/v2/index.php/";
+	const socket = io('http://localhost:3000');
+	console.log(socket);
+	socket.on('connect', () => {
+	   console.log('connected');
+	   
+	});
 </script>
 
 
